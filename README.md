@@ -7,7 +7,7 @@
 ~~~
 # Gnome
 ## Result
-![image](https://user-images.githubusercontent.com/100208156/213437252-31ba05bf-3cf0-49b1-8f44-73ac2054c173.png)
+![image](https://user-images.githubusercontent.com/100208156/213444472-bce20d76-c83e-4834-881b-9193661c03d8.png)
 ## Extensions
 - Arcmenu
 - Aylur's widget
