@@ -1,0 +1,18 @@
+configuration { 
+  modi: [window,drun];
+  case-sensitive: false;
+  font: "hack 13";
+  show-icons: true;
+
+  drun-display-format: "{icon} {name}";
+
+  /* text display */
+	display-window: "Windows";
+	display-drun: "Apps";
+
+  /* keybindings */ 
+  /* kb-row-up: "Up,Tab"; */
+	/* kb-row-down: "Down,Shift+tab"; */
+}
+
+@theme "/home/susu/.config/rofi/susu-theme.rasi"

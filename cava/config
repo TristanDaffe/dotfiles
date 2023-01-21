@@ -132,11 +132,11 @@
 
 # Percentage value for integral smoothing. Takes values from 0 - 100.
 # Higher values means smoother, but less precise. 0 to disable.
-; integral = 77
+; integral = 0.7
 
 # Disables or enables the so-called "Monstercat smoothing" with or without "waves". Set to 0 to disable.
-; monstercat = 0
-; waves = 0
+; monstercat = 1
+; waves = 1
 
 # Set gravity percentage for "drop off". Higher values means bars will drop faster.
 # Accepts only non-negative values. 50 means half gravity, 200 means double. Set to 0 to disable "drop off".
@@ -157,3 +157,4 @@
 ; 3 = 1 # midtone
 ; 4 = 1
 ; 5 = 1 # treble
+
