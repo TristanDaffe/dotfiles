@@ -9,7 +9,6 @@
 ## Result
 ![image](https://user-images.githubusercontent.com/100208156/213444472-bce20d76-c83e-4834-881b-9193661c03d8.png)
 ## Extensions
-- Arcmenu
 - Aylur's widget
 - Blur my shell
 - Color picker
