@@ -18,3 +18,6 @@
 - Rounded window Corners
 - Upower Battery
 - User themes
+
+## Conky
+- Sirius (modified)
