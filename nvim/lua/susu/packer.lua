@@ -49,5 +49,6 @@ return require('packer').startup(function(use)
     use("nvim-lualine/lualine.nvim")
     use('github/copilot.vim')
     use('glepnir/dashboard-nvim')
+    use('yegappan/mru')
 end)
 
