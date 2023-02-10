@@ -1,8 +1,6 @@
 # .dotfiles
 Congfigurations files for apps on linux.
 
-Congfigurations files for apps on linux.
-
 ## installations
 ~~~
 // the repo should be place in the home directory 
