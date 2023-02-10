@@ -1,5 +1,7 @@
 # .dotfiles
 
+Congfigurations files for apps on linux.
+
 ## installations
 ~~~
 // the repo should be place in the home directory 
@@ -7,7 +9,7 @@
 ~~~
 # Gnome
 ## Result
-![image](https://user-images.githubusercontent.com/100208156/213444472-bce20d76-c83e-4834-881b-9193661c03d8.png)
+![Result image on gnome](./resultImage/resultGnome.png)
 ## Extensions
 - Aylur's widget
 - Blur my shell
