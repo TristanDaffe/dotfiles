@@ -1,5 +1,5 @@
 # .dotfiles
-Congfigurations files for apps on linux.
+Configuration files for apps on linux.
 
 ## installations
 ~~~
