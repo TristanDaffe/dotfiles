@@ -21,4 +21,4 @@ Congfigurations files for apps on linux.
 - User themes
 
 ## Conky
-- Sirius (modified)
+- [Sirius](https://www.pling.com/p/1854716) (modified)
