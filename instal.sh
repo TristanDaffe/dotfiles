@@ -1,7 +1,15 @@
 #!/bin/bash
 
-ln -s ~/dotfiles/cava/ ~/.config/cava
-ln -s ~/dotfiles/kitty/ ~/.config/kitty
-ln -s ~/dotfiles/neofetch/ ~/.config/neofetch
-ln -s ~/dotfiles/nvim/ ~/.config/nvim
-ln -s ~/dotfiles/rofi/ ~/.config/rofi
+# install app
+sudo apt install cava rofi kitty neofetch rofi
+# install using snap for more up to date
+sudo snap install nvim
+
+# get current directory
+gitpath=`pwd`
+
+ln -s $gitpath/cava/ ~/.config/cava
+ln -s $gitpath/kitty/ ~/.config/kitty
+ln -s $gitpath/neofetch/ ~/.config/neofetch
+ln -s $gitpath/nvim/ ~/.config/nvim
+ln -s $gitpath/rofi/ ~/.config/rofi
