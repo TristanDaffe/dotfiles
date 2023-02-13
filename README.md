@@ -3,8 +3,7 @@ Configuration files for apps on linux.
 
 ## installations
 ~~~
-// the repo should be place in the home directory 
-// for the installation script to work proprely
+use the install.sh script to create symbolic link or copy paste the folder you want to your .config folder
 ~~~
 # Gnome
 ## Result
