@@ -49,5 +49,8 @@ return require('packer').startup(function(use)
     use('github/copilot.vim')
     use('glepnir/dashboard-nvim')
     use('yegappan/mru')
+    use {"akinsho/toggleterm.nvim", tag = '*', config = function()
+      require("toggleterm").setup()
+    end}
 end)
 
