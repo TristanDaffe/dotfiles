@@ -3,7 +3,8 @@ Configuration files for apps on linux.
 
 ## installations
 ~~~
-use the install.sh script to create symbolic link or copy paste the folder you want to your .config folder
+use the install.sh script to create symbolic link 
+or copy paste the folder you want to your .config folder
 ~~~
 # Gnome
 ## Result
