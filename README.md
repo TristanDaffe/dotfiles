@@ -11,8 +11,8 @@ or copy paste the folder you want to your .config folder
 ![Result image on gnome](./resultImage/resultGnome.png)
 ## Extensions
 - Aylur's widget
+- Bluetooth Quick Connect
 - Blur my shell
-- Color picker
 - Coverflow alt-tab
 - Dash to dock
 - Pop shell
