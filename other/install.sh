@@ -1,19 +1,12 @@
 #!/bin/bash
+
 # install vs code
 sudo snap install --classic code
-# install discord
-sudo snap install discord
 # install git and gitkraken
 sudo apt install git -y
 sudo snap install gitkraken --classic
-# install brave
-sudo snap install brave
-# install notion
-sudo snap install notion-snap
-# install spotify + lollypop
-sudo snap install spotify
-sudo apt install lollypop
 
+sudo snap install brave notion-snap spotify lollypop discord
 
 #install jetbrains toolbox
 #source : https://gist.github.com/greeflas/431bc50c23532eee8a7d6c1d603f3921
