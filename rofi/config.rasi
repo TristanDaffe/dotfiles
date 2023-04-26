@@ -1,5 +1,5 @@
 configuration { 
-  modi: [window,drun];
+	modi: "drun,run,filebrowser,window";
   case-sensitive: false;
   font: "hack 13";
   show-icons: true;
