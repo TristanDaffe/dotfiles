@@ -53,5 +53,6 @@ return require('packer').startup(function(use)
       require("toggleterm").setup()
     end}
     use("lervag/vimtex")
+    use('WhoIsSethDaniel/toggle-lsp-diagnostics.nvim')
 end)
 
