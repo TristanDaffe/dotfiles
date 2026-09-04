@@ -1,0 +1,30 @@
+# Deny everything by default, then allow-list what we want tracked.
+*
+
+!.gitignore
+!README.md
+
+# --- tracked configs ---
+!btop/
+!kitty/
+!neofetch/
+!nvim/
+!themes/
+!tmux/
+!openlogi/
+
+# recurse into the allowed dirs
+!*/**
+
+# --- never track (secrets / caches / state) ---
+.DS_Store
+*.lock
+*.claim
+*.bak
+*.backup.*
+*.sqlite3
+*/.claude/
+
+# mutable state (changes on every theme switch)
+themes/current
+!.gitidentity

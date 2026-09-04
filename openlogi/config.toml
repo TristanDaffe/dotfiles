@@ -1,0 +1,131 @@
+schema_version = 7
+selected_device = "serial:2323lz53maz8"
+
+[devices."serial:2237scu00168".identity]
+display_name = "MX Mechanical Mini"
+codename = "MX MCHNCL M"
+kind = "keyboard"
+
+[app_settings]
+launch_at_login = true
+check_for_updates = true
+auto_install_updates = false
+update_prompt_seen = true
+show_in_menu_bar = true
+capture_mouse_events = true
+app_icon = "openlogi"
+auto_download_assets = true
+asset_source = "automatic"
+thumbwheel_sensitivity = 14
+appearance = "system"
+smooth_scroll = false
+vertical_scroll_sensitivity = 14
+ui_scale = "normal"
+device_view_mode = "grid"
+theme_dark = "Harper"
+
+[devices."serial:2237scu00168".identity.model_info]
+entity_count = 3
+unit_id = [
+    0,
+    0,
+    0,
+    0,
+]
+model_ids = [
+    45927,
+    0,
+    0,
+]
+extended_model_id = 0
+
+[devices."serial:2237scu00168".identity.model_info.transports]
+usb = false
+equad = false
+btle = true
+bluetooth = false
+
+[devices."serial:2237scu00168".identity.capabilities]
+buttons = true
+pointer = false
+lighting = false
+scroll_inversion = false
+hires_wheel = false
+thumbwheel = false
+haptic_feedback = false
+haptic_panel = false
+
+[devices."serial:2237scu00168".links."receiver:96ea33beb39be516:slot:1".capabilities]
+buttons = true
+pointer = false
+lighting = false
+scroll_inversion = false
+hires_wheel = false
+thumbwheel = false
+haptic_feedback = false
+haptic_panel = false
+
+[devices."serial:2323lz53maz8"]
+dpi_presets = [1600]
+scroll_resolution = "low"
+
+[devices."serial:2323lz53maz8".identity]
+display_name = "MX Master 3S"
+codename = "MX Master 3S"
+kind = "mouse"
+
+[devices."serial:2323lz53maz8".identity.model_info]
+entity_count = 3
+unit_id = [
+    0,
+    0,
+    0,
+    0,
+]
+model_ids = [
+    45108,
+    0,
+    0,
+]
+extended_model_id = 0
+
+[devices."serial:2323lz53maz8".identity.model_info.transports]
+usb = false
+equad = false
+btle = true
+bluetooth = false
+
+[devices."serial:2323lz53maz8".identity.capabilities]
+buttons = true
+pointer = true
+lighting = false
+scroll_inversion = true
+hires_wheel = true
+thumbwheel = true
+haptic_feedback = false
+haptic_panel = false
+
+[devices."serial:2323lz53maz8".links."receiver:96ea33beb39be516:slot:2".capabilities]
+buttons = true
+pointer = true
+lighting = false
+scroll_inversion = true
+hires_wheel = true
+thumbwheel = true
+haptic_feedback = false
+haptic_panel = false
+
+[keyboard]
+
+[devices."serial:2323lz53maz8".links."receiver:96ea33beb39be516:slot:2".overrides]
+invert_scroll = true
+
+[devices."serial:2323lz53maz8".bindings]
+DpiToggle = "ShowActionsRing"
+
+[devices."serial:2323lz53maz8".bindings.GestureButton]
+Up = "None"
+Down = "None"
+Left = "PreviousDesktop"
+Right = "NextDesktop"
+Click = "MissionControl"

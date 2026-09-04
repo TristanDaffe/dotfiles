@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+# Relevancy segment (lesson 5): prints NOTHING unless something needs
+# attention, so the bar stays quiet during normal work and only speaks up when
+# it has something to say. Emits plain text; status-right supplies the color.
+#
+# Swap the body for whatever matters to you — a meeting countdown, CI state, a
+# deploy lock. The contract is only: print a short string, or print nothing.
+#
+# Default: warn when the battery is low and not charging.
+info="$(pmset -g batt 2>/dev/null)" || exit 0
+case "$info" in
+    *"AC Power"*) exit 0 ;;
+esac
+pct="$(printf '%s' "$info" | grep -oE '[0-9]+%' | head -1 | tr -d '%')"
+[ -n "$pct" ] || exit 0
+[ "$pct" -le 20 ] 2>/dev/null || exit 0
+printf ' %s%% ' "$pct"

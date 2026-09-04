@@ -1,0 +1,13 @@
+# Bootstrap dependencies (install before first launch)
+#
+# macOS:
+brew install ripgrep   # Telescope live_grep
+brew install fd        # Telescope find_files
+brew install node      # Copilot and most LSPs (ts_ls, angularls, html, cssls, yamlls, bashls, ansiblels)
+
+# Everything else (language servers: lua-language-server, typescript-language-server,
+# ngserver, yaml-language-server, bash-language-server, ansible-language-server,
+# vscode-html-language-server, vscode-css-language-server) is installed
+# automatically by Mason on first launch via `ensure_installed`.
+#
+# Treesitter parsers also install on first launch (see lua/plugins.lua).

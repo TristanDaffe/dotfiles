@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# Prints "<branch> " for a tmux pane path, or nothing outside a git repo.
+# Detached HEAD -> short sha. Emits text only, no colors, so it is shared by
+# every theme; status-right supplies the styling.
+d="${1:-$PWD}"
+[ -d "$d" ] || exit 0
+b="$(git -C "$d" symbolic-ref --quiet --short HEAD 2>/dev/null)"
+if [ -z "$b" ]; then
+    b="$(git -C "$d" rev-parse --short HEAD 2>/dev/null)"
+fi
+[ -n "$b" ] && printf '%s ' "$b"
+exit 0

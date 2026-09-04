@@ -1,0 +1,261 @@
+#!/usr/bin/env bash
+# theme-set [name] — point ~/.config/themes/current at a theme and reload
+# running kitty / tmux / nvim.
+#
+#   theme-set                interactive picker (arrows/jk, or fzf if installed)
+#   theme-set <name>         switch directly
+#   theme-set -l | --list    print the list, no picker
+#   theme-set --preview <n>  palette preview (used by the fzf preview pane)
+#
+# Written for bash 3.2 (macOS /bin/bash): no arrays, no mapfile.
+set -uo pipefail
+
+THEMES_DIR="${THEMES_DIR:-$HOME/.config/themes}"
+CURRENT="$THEMES_DIR/current"
+SELF="$THEMES_DIR/theme-set"
+
+list() { find "$THEMES_DIR" -mindepth 1 -maxdepth 1 -type d -exec basename {} \; | sort; }
+
+current_theme() {
+    if [ -L "$CURRENT" ]; then basename "$(readlink "$CURRENT")"; else echo "(none)"; fi
+}
+
+# ── palette preview ────────────────────────────────────────────────────────
+hex2rgb() {
+    h="${1#\#}"
+    printf '%d;%d;%d' "0x${h:0:2}" "0x${h:2:2}" "0x${h:4:2}"
+}
+
+preview() {
+    d="$THEMES_DIR/${1:-}"
+    [ -d "$d" ] || return 0
+    printf '\033[1m%s\033[0m\n\n' "$1"
+    if [ -f "$d/tmux.conf" ]; then
+        grep -E '^set -g @thm_' "$d/tmux.conf" 2>/dev/null | while read -r _ _ key val; do
+            val="${val%\"}"; val="${val#\"}"
+            case "$val" in
+                '#'??????)
+                    printf '  \033[48;2;%sm      \033[0m  %-9s %s\n' \
+                        "$(hex2rgb "$val")" "${key#@thm_}" "$val" ;;
+                *)  printf '  %-6s  %-9s %s\n' '' "${key#@thm_}" "$val" ;;
+            esac
+        done
+    fi
+    if [ -f "$d/nvim.lua" ]; then
+        cs="$(grep -oE "colorscheme\('[^']+'\)" "$d/nvim.lua" 2>/dev/null | head -1)"
+        cs="${cs#colorscheme(\'}"; cs="${cs%\')}"
+        [ -n "$cs" ] && printf '\n  nvim  %s\n' "$cs"
+    fi
+    ov="$(grep -cE '^set -g (status-position|status-interval|@thm_bar_bg)' "$d/tmux.conf" 2>/dev/null || true)"
+    [ "${ov:-0}" -gt 0 ] && printf '  overrides  %s\n' "$ov"
+    return 0
+}
+
+# ── pickers ────────────────────────────────────────────────────────────────
+pick_fzf() {
+    list | fzf --height='~60%' --reverse --no-multi \
+        --prompt='theme> ' \
+        --header="current: $(current_theme)" \
+        --preview="'$SELF' --preview {}" \
+        --preview-window='right,46%'
+}
+
+pick_keys() {
+    # Arrow / jk navigator. Draws to stderr (stdout is the captured result) and
+    # reads single keypresses from stdin, which the caller has already checked
+    # is a terminal.
+    #
+    # bash 3.2 note: `read -t` only takes whole seconds here, so an escape
+    # sequence cannot be detected by timeout. Arrow keys deliver all three
+    # bytes at once, so after ESC the remaining two are already buffered and a
+    # blocking `read -rsn2` returns immediately.
+    now="$(current_theme)"
+    names="$(list)"
+    count="$(printf '%s\n' "$names" | grep -c . || true)"
+    [ "${count:-0}" -gt 0 ] || { echo 'theme-set: no themes found' >&2; return 1; }
+
+    width=0
+    sel=1
+    i=0
+    while IFS= read -r n; do
+        [ -n "$n" ] || continue
+        i=$((i + 1))
+        [ "$n" = "$now" ] && sel=$i
+        len=${#n}
+        [ "$len" -gt "$width" ] && width=$len
+    done <<EOF
+$names
+EOF
+    fmt="%-${width}s"
+
+    # Two header lines plus a blank one sit above the list; undraw walks back
+    # over all of it and erases to the end of the screen, so the picker leaves
+    # no trace once you have chosen.
+    head_lines=3
+    undraw() { printf '\033[%dA\033[J\033[?25h' "$((count + head_lines))" >&2; }
+
+    printf '\033[?25l' >&2
+    # Safety net only: the explicit undraw below handles the normal paths, and
+    # this leaves the cursor visible if we are interrupted mid-draw.
+    trap 'printf "\033[?25h" >&2' EXIT INT TERM
+
+    printf '  current: %s\n  j/k or arrows to move, enter to select, q to cancel\n\n' "$now" >&2
+
+    drawn=0
+    while :; do
+        [ "$drawn" -eq 1 ] && printf '\033[%dA' "$count" >&2
+        i=0
+        while IFS= read -r n; do
+            [ -n "$n" ] || continue
+            i=$((i + 1))
+            if [ "$n" = "$now" ]; then m='*'; else m=' '; fi
+            printf '\033[2K' >&2
+            if [ "$i" -eq "$sel" ]; then
+                printf "  \033[1;7m %s $fmt \033[0m\n" "$m" "$n" >&2
+            else
+                printf "    %s $fmt \n" "$m" "$n" >&2
+            fi
+        done <<EOF
+$names
+EOF
+        drawn=1
+
+        IFS= read -rsn1 key || { undraw; return 1; }
+        if [ "$key" = "$(printf '\033')" ]; then
+            IFS= read -rsn2 rest || rest=""
+            key="ESC$rest"
+        fi
+
+        case "$key" in
+            k|ESC'[A')  sel=$((sel - 1)); [ "$sel" -lt 1 ] && sel=$count ;;
+            j|ESC'[B')  sel=$((sel + 1)); [ "$sel" -gt "$count" ] && sel=1 ;;
+            g)          sel=1 ;;
+            G)          sel=$count ;;
+            [1-9])      [ "$key" -le "$count" ] && sel=$key ;;
+            q|Q|ESC)    undraw; return 1 ;;
+            "")         undraw
+                        printf '%s\n' "$names" | sed -n "${sel}p"
+                        return 0 ;;
+        esac
+    done
+}
+
+pick_menu() {
+    now="$(current_theme)"
+    i=0
+    names=""
+    while IFS= read -r n; do
+        [ -n "$n" ] || continue
+        i=$((i + 1))
+        names="$names$n
+"
+        if [ "$n" = "$now" ]; then mark='*'; else mark=' '; fi
+        printf '  %s %2d) %s\n' "$mark" "$i" "$n" >&2
+    done <<EOF
+$(list)
+EOF
+    [ "$i" -gt 0 ] || { echo 'theme-set: no themes found' >&2; return 1; }
+    printf '\n  * = current\n\nselect [1-%d], enter to cancel: ' "$i" >&2
+    read -r reply || return 1
+    [ -n "$reply" ] || return 1
+    case "$reply" in
+        *[!0-9]*) printf 'theme-set: not a number: %s\n' "$reply" >&2; return 1 ;;
+    esac
+    { [ "$reply" -ge 1 ] && [ "$reply" -le "$i" ]; } \
+        || { echo 'theme-set: out of range' >&2; return 1; }
+    printf '%s\n' "$names" | sed -n "${reply}p"
+}
+
+# ── argument handling ──────────────────────────────────────────────────────
+name=""
+case "${1:-}" in
+    --preview) preview "${2:-}"; exit 0 ;;
+    -l|--list) list; exit 0 ;;
+    -h|--help) sed -n '2,9p' "$SELF" | sed 's/^# \{0,1\}//'; exit 0 ;;
+    "")
+        # Only prompt when attached to a terminal, so `theme-set | ...` and
+        # non-interactive callers still get a plain list.
+        if [ -t 0 ] && [ -t 2 ]; then
+            if command -v fzf >/dev/null 2>&1; then
+                name="$(pick_fzf)" || exit 0
+            elif [ -r /dev/tty ]; then
+                name="$(pick_keys)" || exit 0
+            else
+                name="$(pick_menu)" || exit 0
+            fi
+            [ -n "$name" ] || exit 0
+        else
+            printf 'current: %s\n\navailable:\n' "$(current_theme)"
+            list | sed 's/^/  /'
+            exit 0
+        fi
+        ;;
+    *) name="$1" ;;
+esac
+
+if [ ! -d "$THEMES_DIR/$name" ]; then
+    printf 'theme-set: no such theme %s\n\navailable:\n' "'$name'" >&2
+    list | sed 's/^/  /' >&2
+    exit 1
+fi
+
+ln -sfn "$name" "$CURRENT"
+printf 'theme -> %s\n' "$name"
+
+# kitty: needs allow_remote_control socket-only + listen_on. Candidate sockets
+# are the one kitty exported into this shell plus any on disk, deduped — tmux
+# does not pass KITTY_LISTEN_ON through to its panes.
+k=0
+if command -v kitty >/dev/null 2>&1; then
+    socks="$(
+        if [ -n "${KITTY_LISTEN_ON:-}" ]; then printf '%s\n' "${KITTY_LISTEN_ON#unix:}"; fi
+        for s in /tmp/kitty-*; do
+            if [ -S "$s" ]; then printf '%s\n' "$s"; fi
+        done
+    )"
+    while IFS= read -r s; do
+        [ -n "$s" ] || continue
+        if kitty @ --to "unix:$s" set-colors --all --configured "$CURRENT/kitty.conf" >/dev/null 2>&1; then
+            k=$((k + 1))
+        fi
+    done < <(printf '%s\n' "$socks" | sort -u)
+fi
+if [ "$k" -gt 0 ]; then
+    printf '  kitty: reloaded %d window group(s)\n' "$k"
+else
+    echo '  kitty: applies on restart (no reachable socket)'
+fi
+
+# tmux: source the MAIN config, not the theme file. The main config sets the
+# bar defaults and then sources the theme, so a theme that overrides something
+# (say status-position) is undone when you switch to one that does not.
+if command -v tmux >/dev/null 2>&1 && tmux info >/dev/null 2>&1; then
+    found=0
+    for tconf in "$HOME/.config/tmux/tmux.conf" "$HOME/.tmux.conf"; do
+        [ -f "$tconf" ] || continue
+        found=1
+        if tmux source-file "$tconf" >/dev/null 2>&1 && tmux refresh-client -S >/dev/null 2>&1; then
+            echo '  tmux: reloaded'
+        else
+            echo "  tmux: source-file $tconf failed"
+        fi
+        break
+    done
+    [ "$found" -eq 1 ] || echo '  tmux: no config file found'
+else
+    echo '  tmux: no server running'
+fi
+
+# nvim: drive every listening instance through its socket
+n=0
+while IFS= read -r sock; do
+    [ -n "$sock" ] || continue
+    if nvim --server "$sock" --remote-send '<C-\><C-N>:ThemeReload<CR>' >/dev/null 2>&1; then
+        n=$((n + 1))
+    fi
+done < <(find "${TMPDIR:-/tmp}" -maxdepth 3 -path '*nvim*' -type s 2>/dev/null)
+if [ "$n" -gt 0 ]; then
+    printf '  nvim: reloaded %d instance(s)\n' "$n"
+else
+    echo '  nvim: applies on next start'
+fi
