@@ -10,6 +10,7 @@
 !neofetch/
 !nvim/
 !themes/
+!zsh/
 !tmux/
 !openlogi/
 
@@ -28,3 +29,6 @@
 # mutable state (changes on every theme switch)
 themes/current
 !.gitidentity
+
+# mutable state (changes on every bar switch)
+themes/current-bar

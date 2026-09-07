@@ -1,0 +1,200 @@
+#!/usr/bin/env bash
+# bar-set [name] — point ~/.config/themes/current-bar at a bar layout and
+# reload running tmux.
+#
+#   bar-set                  interactive picker (arrows/jk, or fzf if installed)
+#   bar-set <name>           switch directly
+#   bar-set -l | --list      print the list, no picker
+#   bar-set --preview <n>    show the bar's zones, used by the fzf preview pane
+#
+# Bar = SHAPE, theme = COLOUR. They are independent: any bar works with any
+# theme, because bars only reference @thm_* options the theme sets.
+#
+# Written for bash 3.2 (macOS /bin/bash): no arrays, no mapfile.
+set -uo pipefail
+
+THEMES_DIR="${THEMES_DIR:-$HOME/.config/themes}"
+BARS_DIR="$THEMES_DIR/bars"
+CURRENT="$THEMES_DIR/current-bar"
+SELF="$BARS_DIR/../bar-set"
+
+list() { find "$BARS_DIR" -mindepth 1 -maxdepth 1 -type d -exec basename {} \; | sort; }
+
+current_bar() {
+    if [ -L "$CURRENT" ]; then basename "$(readlink "$CURRENT")"; else echo "(none)"; fi
+}
+
+# ── preview ────────────────────────────────────────────────────────────────
+# Prints the header comment of the bar file: what it looks like, in words.
+preview() {
+    d="$BARS_DIR/${1:-}"
+    [ -d "$d" ] || return 0
+    printf '\033[1m%s\033[0m\n\n' "$1"
+    # Only the leading comment block: stop at the first line that is not a
+    # comment, so the tmux settings below it never leak into the pane.
+    awk '/^#/ { sub(/^#[ ]?/, ""); print "  " $0; next } { exit }' "$d/tmux.conf"
+    return 0
+}
+
+pick_fzf() {
+    list | fzf --height='~60%' --reverse --no-multi \
+        --prompt='bar> ' \
+        --header="current: $(current_bar)" \
+        --preview="'$SELF' --preview {}" \
+        --preview-window='right,52%'
+}
+
+pick_keys() {
+    now="$(current_bar)"
+    names="$(list)"
+    count="$(printf '%s\n' "$names" | grep -c . || true)"
+    [ "${count:-0}" -gt 0 ] || { echo 'bar-set: no bars found' >&2; return 1; }
+
+    width=0
+    sel=1
+    i=0
+    while IFS= read -r n; do
+        [ -n "$n" ] || continue
+        i=$((i + 1))
+        [ "$n" = "$now" ] && sel=$i
+        len=${#n}
+        [ "$len" -gt "$width" ] && width=$len
+    done <<EOF
+$names
+EOF
+    fmt="%-${width}s"
+
+    head_lines=3
+    undraw() { printf '\033[%dA\033[J\033[?25h' "$((count + head_lines))" >&2; }
+
+    printf '\033[?25l' >&2
+    trap 'printf "\033[?25h" >&2' EXIT INT TERM
+
+    printf '  current: %s\n  j/k or arrows to move, enter to select, q to cancel\n\n' "$now" >&2
+
+    drawn=0
+    while :; do
+        [ "$drawn" -eq 1 ] && printf '\033[%dA' "$count" >&2
+        i=0
+        while IFS= read -r n; do
+            [ -n "$n" ] || continue
+            i=$((i + 1))
+            if [ "$n" = "$now" ]; then m='*'; else m=' '; fi
+            printf '\033[2K' >&2
+            if [ "$i" -eq "$sel" ]; then
+                printf "  \033[1;7m %s $fmt \033[0m\n" "$m" "$n" >&2
+            else
+                printf "    %s $fmt \n" "$m" "$n" >&2
+            fi
+        done <<EOF
+$names
+EOF
+        drawn=1
+
+        IFS= read -rsn1 key || { undraw; return 1; }
+        if [ "$key" = "$(printf '\033')" ]; then
+            IFS= read -rsn2 rest || rest=""
+            key="ESC$rest"
+        fi
+
+        case "$key" in
+            k|ESC'[A')  sel=$((sel - 1)); [ "$sel" -lt 1 ] && sel=$count ;;
+            j|ESC'[B')  sel=$((sel + 1)); [ "$sel" -gt "$count" ] && sel=1 ;;
+            g)          sel=1 ;;
+            G)          sel=$count ;;
+            [1-9])      [ "$key" -le "$count" ] && sel=$key ;;
+            q|Q|ESC)    undraw; return 1 ;;
+            "")         undraw
+                        printf '%s\n' "$names" | sed -n "${sel}p"
+                        return 0 ;;
+        esac
+    done
+}
+
+pick_menu() {
+    now="$(current_bar)"
+    i=0
+    names=""
+    while IFS= read -r n; do
+        [ -n "$n" ] || continue
+        i=$((i + 1))
+        names="$names$n
+"
+        if [ "$n" = "$now" ]; then mark='*'; else mark=' '; fi
+        printf '  %s %2d) %s\n' "$mark" "$i" "$n" >&2
+    done <<EOF
+$(list)
+EOF
+    [ "$i" -gt 0 ] || { echo 'bar-set: no bars found' >&2; return 1; }
+    printf '\n  * = current\n\nselect [1-%d], enter to cancel: ' "$i" >&2
+    read -r reply || return 1
+    [ -n "$reply" ] || return 1
+    case "$reply" in
+        *[!0-9]*) printf 'bar-set: not a number: %s\n' "$reply" >&2; return 1 ;;
+    esac
+    { [ "$reply" -ge 1 ] && [ "$reply" -le "$i" ]; } \
+        || { echo 'bar-set: out of range' >&2; return 1; }
+    printf '%s\n' "$names" | sed -n "${reply}p"
+}
+
+# ── argument handling ──────────────────────────────────────────────────────
+name=""
+case "${1:-}" in
+    --preview) preview "${2:-}"; exit 0 ;;
+    -l|--list) list; exit 0 ;;
+    -h|--help) sed -n '2,12p' "$SELF" | sed 's/^# \{0,1\}//'; exit 0 ;;
+    "")
+        if [ -t 0 ] && [ -t 2 ]; then
+            if command -v fzf >/dev/null 2>&1; then
+                name="$(pick_fzf)" || exit 0
+            elif [ -r /dev/tty ]; then
+                name="$(pick_keys)" || exit 0
+            else
+                name="$(pick_menu)" || exit 0
+            fi
+            [ -n "$name" ] || exit 0
+        else
+            printf 'current: %s\n\navailable:\n' "$(current_bar)"
+            list | sed 's/^/  /'
+            exit 0
+        fi
+        ;;
+    *) name="$1" ;;
+esac
+
+if [ ! -d "$BARS_DIR/$name" ]; then
+    printf 'bar-set: no such bar %s\n\navailable:\n' "'$name'" >&2
+    list | sed 's/^/  /' >&2
+    exit 1
+fi
+
+ln -sfn "bars/$name" "$CURRENT"
+printf 'bar -> %s\n' "$name"
+
+# tmux: source the MAIN config, never the bar file directly. The main config
+# sets the layout defaults, then the bar, then the theme — so a bar that
+# overrides something is undone when you switch to one that does not.
+if command -v tmux >/dev/null 2>&1 && tmux info >/dev/null 2>&1; then
+    found=0
+    for tconf in "$HOME/.config/tmux/tmux.conf" "$HOME/.tmux.conf"; do
+        [ -f "$tconf" ] || continue
+        found=1
+        if tmux source-file "$tconf" >/dev/null 2>&1; then
+            tmux refresh-client -S >/dev/null 2>&1
+            echo '  tmux: reloaded'
+        else
+            echo "  tmux: source-file $tconf failed"
+        fi
+        break
+    done
+    [ "$found" -eq 1 ] || echo '  tmux: no config found'
+else
+    echo '  tmux: not running, applies on next start'
+fi
+
+# zsh: Powerlevel10k reads its config once at startup, and there is no safe way
+# to reach other running shells (SIGUSR1 kills any zsh that has no trap for it),
+# so state the manual step instead of guessing.
+if [ -r "$HOME/.config/zsh/powerline.zsh" ]; then
+    echo '  zsh: open shells retheme at their next prompt'
+fi

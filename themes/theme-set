@@ -11,10 +11,14 @@
 set -uo pipefail
 
 THEMES_DIR="${THEMES_DIR:-$HOME/.config/themes}"
+# Palettes live in their own directory so this list stays a list of THEMES.
+# They used to sit directly under themes/, which meant `bars` -- and anything
+# else added beside them -- turned up in the picker as if it were a theme.
+PALETTES_DIR="$THEMES_DIR/palettes"
 CURRENT="$THEMES_DIR/current"
 SELF="$THEMES_DIR/theme-set"
 
-list() { find "$THEMES_DIR" -mindepth 1 -maxdepth 1 -type d -exec basename {} \; | sort; }
+list() { find "$PALETTES_DIR" -mindepth 1 -maxdepth 1 -type d -exec basename {} \; | sort; }
 
 current_theme() {
     if [ -L "$CURRENT" ]; then basename "$(readlink "$CURRENT")"; else echo "(none)"; fi
@@ -27,7 +31,7 @@ hex2rgb() {
 }
 
 preview() {
-    d="$THEMES_DIR/${1:-}"
+    d="$PALETTES_DIR/${1:-}"
     [ -d "$d" ] || return 0
     printf '\033[1m%s\033[0m\n\n' "$1"
     if [ -f "$d/tmux.conf" ]; then
@@ -193,13 +197,13 @@ case "${1:-}" in
     *) name="$1" ;;
 esac
 
-if [ ! -d "$THEMES_DIR/$name" ]; then
+if [ ! -d "$PALETTES_DIR/$name" ]; then
     printf 'theme-set: no such theme %s\n\navailable:\n' "'$name'" >&2
     list | sed 's/^/  /' >&2
     exit 1
 fi
 
-ln -sfn "$name" "$CURRENT"
+ln -sfn "palettes/$name" "$CURRENT"
 printf 'theme -> %s\n' "$name"
 
 # kitty: needs allow_remote_control socket-only + listen_on. Candidate sockets
@@ -258,4 +262,11 @@ if [ "$n" -gt 0 ]; then
     printf '  nvim: reloaded %d instance(s)\n' "$n"
 else
     echo '  nvim: applies on next start'
+fi
+
+# zsh: Powerlevel10k reads its config once at startup, and there is no safe way
+# to reach other running shells (SIGUSR1 kills any zsh that has no trap for it),
+# so state the manual step instead of guessing.
+if [ -r "$HOME/.config/zsh/powerline.zsh" ]; then
+    echo '  zsh: open shells retheme at their next prompt'
 fi
