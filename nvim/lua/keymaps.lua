@@ -17,10 +17,6 @@ map('n', '<C-u>', '<C-u>zz', { desc = 'Half page up (centered)' })
 map('x', '>', '>gv', { desc = 'Indent right, keep selection' })
 map('x', '<', '<gv', { desc = 'Indent left, keep selection' })
 
--- Layer 1 — splits.  Modifier = Option.
--- Same actions live at layer 2 (tmux, prefix C-b) and layer 3 (WM, Ctrl+Cmd);
--- only the modifier changes.  See the "Motion layers" note.
-
 -- move: hjkl
 map('n', '<M-h>', '<C-w>h', { desc = 'Layer 1: focus split left' })
 map('n', '<M-j>', '<C-w>j', { desc = 'Layer 1: focus split down' })

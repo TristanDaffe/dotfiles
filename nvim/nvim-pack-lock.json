@@ -148,6 +148,10 @@
     "typst-preview.nvim": {
       "rev": "291972a39db85c5d2e76249748aba4206dfd3bc2",
       "src": "https://github.com/chomosuke/typst-preview.nvim"
+    },
+    "vim-obsession": {
+      "rev": "5d63e5b50ebf554d378528e357157c89e91313c9",
+      "src": "https://github.com/tpope/vim-obsession.git"
     }
   }
 }

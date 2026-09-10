@@ -23,6 +23,7 @@ vim.pack.add({
     { src = "https://github.com/hrsh7th/cmp-path" },
     { src = "https://github.com/L3MON4D3/LuaSnip" },
     { src = "https://github.com/saadparwaiz1/cmp_luasnip" },
+    { src = "https://github.com/tpope/vim-obsession.git" },
 })
 
 local map = vim.keymap.set
@@ -119,3 +120,15 @@ require('Comment').setup({})
 -- Copilot
 vim.g.copilot_no_tab_map = true
 map('i', '<C-J>', 'copilot#Accept("<CR>")', { expr = true, replace_keycodes = false, desc = 'Copilot accept' })
+
+-- Session tracking (tpope/vim-obsession)
+--
+-- Vimscript plugin: no Lua module, no setup(), and no options for a session
+-- directory. It is driven entirely by the command, which writes to the path you
+-- give it and then keeps that file up to date:
+--
+--   :Obsession ~/.local/share/nvim/sessions/foo.vim   start tracking
+--   :Obsession!                                       stop and delete
+--   nvim -S ~/.local/share/nvim/sessions/foo.vim      restore
+--
+-- With no argument it writes ./Session.vim in the current directory.
