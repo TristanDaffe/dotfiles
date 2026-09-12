@@ -5,25 +5,22 @@
 # Sourced by zsh/powerline.zsh between the palette and the bar geometry, which
 # puts it after ~/.p10k.zsh -- so it overrides the wizard without replacing it.
 #
-# Scheme transcribed from tolkonepiu/catppuccin-powerlevel10k-themes
-# (.p10k-rainbow-catppuccin-mocha.zsh). It does three things the wizard does
-# not: fills segments from the theme's own accents rather than terminal
-# indices, uses ONE dark foreground everywhere, and gives the prompt a dark
-# surface background instead of leaving it black.
+# The palette is the one the tmux bar uses -- overlay, surface, accent, text,
+# muted, warn -- so the prompt and the bar read as one system. tmux.conf draws
+# its bar almost entirely from @thm_overlay with @thm_accent for the session
+# name; the prompt mirrors that, with each segment still getting its own fill.
 #
-#   catppuccin   here          used for
-#   crust        _thm_dark     the foreground on every filled segment
-#   surface0     _thm_surface  global background
-#   lavender     _thm_ansi12   directory
-#   mauve        _thm_accent   VCS clean
-#   peach        _thm_ansi11   VCS modified
-#   pink         _thm_ansi13   VCS untracked, clock
-#   maroon       _thm_ansi9    VCS conflicted, errors
-#   yellow       _thm_ansi3    VCS loading, jobs, direnv
-#   green        _thm_ok       status ok (green, or the theme's lightest positive hue)
-#   subtext1     _thm_ansi7    command execution time
-#   text         _thm_text     OS icon
-#   sky / teal   _thm_ansi14 / _thm_ansi6   python / node
+#   role            segment
+#   surface+accent  OS icon      a dark plate, theme accent on it
+#   accent          directory    the theme's signature colour
+#   ok              git, clean   green (or the theme's lightest positive hue)
+#   warn            git dirty, and any error status
+#   ansi3           git untracked
+#   overlay         status when there is nothing to say
+#
+# Chosen by measurement, not taste: adjacent fills are >=36.9 apart in CIE Lab
+# (the previous peach-next-to-green pair was 32.3 and read as one colour), and
+# every foreground clears 4.5:1 on its own background.
 #
 # WHY THIS EXISTS AT ALL. 190 of the wizard's 204 colours are terminal indices
 # 0-15, which kitty repaints from the theme -- those already follow theme-set on
@@ -39,36 +36,47 @@
 typeset -g POWERLEVEL9K_BACKGROUND=$_thm_surface
 
 # ── filled segments: theme accent behind, one dark colour in front ─────────
-typeset -g POWERLEVEL9K_OS_ICON_BACKGROUND=$_thm_text
-typeset -g POWERLEVEL9K_OS_ICON_FOREGROUND=$_thm_dark
+# os_icon and context are one capsule: a dark plate with light text, the only
+# segment that is not an accent. It anchors the left end of the strip.
+typeset -g POWERLEVEL9K_OS_ICON_BACKGROUND=$_thm_surface
+typeset -g POWERLEVEL9K_OS_ICON_FOREGROUND=$_thm_accent
+typeset -g POWERLEVEL9K_CONTEXT_BACKGROUND=$_thm_surface
+typeset -g POWERLEVEL9K_CONTEXT_FOREGROUND=$_thm_light
+typeset -g POWERLEVEL9K_CONTEXT_DEFAULT_BACKGROUND=$_thm_surface
+typeset -g POWERLEVEL9K_CONTEXT_DEFAULT_FOREGROUND=$_thm_light
+typeset -g POWERLEVEL9K_CONTEXT_SUDO_BACKGROUND=$_thm_surface
+typeset -g POWERLEVEL9K_CONTEXT_SUDO_FOREGROUND=$_thm_ansi11
+typeset -g POWERLEVEL9K_CONTEXT_ROOT_BACKGROUND=$_thm_ansi9
+typeset -g POWERLEVEL9K_CONTEXT_ROOT_FOREGROUND=$_thm_dark
 
-typeset -g POWERLEVEL9K_DIR_BACKGROUND=$_thm_ansi12
+typeset -g POWERLEVEL9K_DIR_BACKGROUND=$_thm_accent
 typeset -g POWERLEVEL9K_DIR_FOREGROUND=$_thm_dark
-typeset -g POWERLEVEL9K_DIR_ANCHOR_BACKGROUND=$_thm_ansi12
+typeset -g POWERLEVEL9K_DIR_ANCHOR_BACKGROUND=$_thm_accent
 typeset -g POWERLEVEL9K_DIR_ANCHOR_FOREGROUND=$_thm_dark
 typeset -g POWERLEVEL9K_DIR_ANCHOR_BOLD=true
 typeset -g POWERLEVEL9K_DIR_SHORTENED_FOREGROUND=$_thm_dark
 
-typeset -g POWERLEVEL9K_VCS_CLEAN_BACKGROUND=$_thm_accent
+typeset -g POWERLEVEL9K_VCS_CLEAN_BACKGROUND=$_thm_ok
 typeset -g POWERLEVEL9K_VCS_CLEAN_FOREGROUND=$_thm_dark
-typeset -g POWERLEVEL9K_VCS_MODIFIED_BACKGROUND=$_thm_ansi11
+typeset -g POWERLEVEL9K_VCS_MODIFIED_BACKGROUND=$_thm_warn
 typeset -g POWERLEVEL9K_VCS_MODIFIED_FOREGROUND=$_thm_dark
-typeset -g POWERLEVEL9K_VCS_UNTRACKED_BACKGROUND=$_thm_ansi13
+typeset -g POWERLEVEL9K_VCS_UNTRACKED_BACKGROUND=$_thm_ansi3
 typeset -g POWERLEVEL9K_VCS_UNTRACKED_FOREGROUND=$_thm_dark
-typeset -g POWERLEVEL9K_VCS_CONFLICTED_BACKGROUND=$_thm_ansi9
+typeset -g POWERLEVEL9K_VCS_CONFLICTED_BACKGROUND=$_thm_warn
 typeset -g POWERLEVEL9K_VCS_CONFLICTED_FOREGROUND=$_thm_dark
-typeset -g POWERLEVEL9K_VCS_LOADING_BACKGROUND=$_thm_ansi3
-typeset -g POWERLEVEL9K_VCS_LOADING_FOREGROUND=$_thm_dark
+typeset -g POWERLEVEL9K_VCS_LOADING_BACKGROUND=$_thm_overlay
+typeset -g POWERLEVEL9K_VCS_LOADING_FOREGROUND=$_thm_muted
 
-typeset -g POWERLEVEL9K_STATUS_OK_BACKGROUND=$_thm_ok
-typeset -g POWERLEVEL9K_STATUS_OK_FOREGROUND=$_thm_dark
-typeset -g POWERLEVEL9K_STATUS_OK_PIPE_BACKGROUND=$_thm_ok
-typeset -g POWERLEVEL9K_STATUS_OK_PIPE_FOREGROUND=$_thm_dark
-typeset -g POWERLEVEL9K_STATUS_ERROR_BACKGROUND=$_thm_ansi9
+# Status sits between git and the clock as a thin always-present capsule.
+typeset -g POWERLEVEL9K_STATUS_OK_BACKGROUND=$_thm_overlay
+typeset -g POWERLEVEL9K_STATUS_OK_FOREGROUND=$_thm_muted
+typeset -g POWERLEVEL9K_STATUS_OK_PIPE_BACKGROUND=$_thm_overlay
+typeset -g POWERLEVEL9K_STATUS_OK_PIPE_FOREGROUND=$_thm_muted
+typeset -g POWERLEVEL9K_STATUS_ERROR_BACKGROUND=$_thm_warn
 typeset -g POWERLEVEL9K_STATUS_ERROR_FOREGROUND=$_thm_dark
-typeset -g POWERLEVEL9K_STATUS_ERROR_SIGNAL_BACKGROUND=$_thm_ansi9
+typeset -g POWERLEVEL9K_STATUS_ERROR_SIGNAL_BACKGROUND=$_thm_warn
 typeset -g POWERLEVEL9K_STATUS_ERROR_SIGNAL_FOREGROUND=$_thm_dark
-typeset -g POWERLEVEL9K_STATUS_ERROR_PIPE_BACKGROUND=$_thm_ansi9
+typeset -g POWERLEVEL9K_STATUS_ERROR_PIPE_BACKGROUND=$_thm_warn
 typeset -g POWERLEVEL9K_STATUS_ERROR_PIPE_FOREGROUND=$_thm_dark
 
 typeset -g POWERLEVEL9K_COMMAND_EXECUTION_TIME_BACKGROUND=$_thm_ansi7

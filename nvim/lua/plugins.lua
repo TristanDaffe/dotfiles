@@ -4,6 +4,7 @@ vim.pack.add({
     { src = "https://github.com/EdenEast/nightfox.nvim" },
     { src = "https://github.com/Mofiqul/dracula.nvim" },
     { src = "https://github.com/catppuccin/nvim", name = "catppuccin" },
+    { src = "https://github.com/ellisonleao/gruvbox.nvim" },
     { src = "https://github.com/nvim-tree/nvim-tree.lua" },
     { src = "https://github.com/nvim-tree/nvim-web-devicons" },
     { src = "https://github.com/nvim-lualine/lualine.nvim" },

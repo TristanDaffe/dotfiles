@@ -1,0 +1,94 @@
+# duskfox — Powerlevel10k segment colours
+#
+# The Catppuccin Starship powerline config, in this theme's colours. Each of
+# its six palette roles maps to the equivalent hue from EdenEast/nightfox.nvim duskfox palette:
+#
+#   red  peach  yellow  green  sapphire  lavender   ->   red / orange / yellow / green / blue / magenta
+#
+# Every segment carries crust, the palette's darkest shade, as its text --
+# one foreground across the whole strip, as the original does.
+#
+# crust is bg0 (#191726), one step below the background this theme uses.
+#
+# Overrides themes/p10k-colors.zsh, sourced first, which still supplies every
+# segment this file does not name.
+
+typeset -g POWERLEVEL9K_BACKGROUND=#191726
+
+# red      -> os_icon
+typeset -g POWERLEVEL9K_OS_ICON_BACKGROUND=#eb6f92
+typeset -g POWERLEVEL9K_OS_ICON_FOREGROUND=#191726
+
+# peach    -> dir, dir_anchor
+typeset -g POWERLEVEL9K_DIR_BACKGROUND=#ea9a97
+typeset -g POWERLEVEL9K_DIR_FOREGROUND=#191726
+typeset -g POWERLEVEL9K_DIR_ANCHOR_BACKGROUND=#ea9a97
+typeset -g POWERLEVEL9K_DIR_ANCHOR_FOREGROUND=#191726
+
+# yellow   -> vcs_clean, vcs_modified, vcs_untracked, vcs_conflicted …
+typeset -g POWERLEVEL9K_VCS_CLEAN_BACKGROUND=#f6c177
+typeset -g POWERLEVEL9K_VCS_CLEAN_FOREGROUND=#191726
+typeset -g POWERLEVEL9K_VCS_MODIFIED_BACKGROUND=#f6c177
+typeset -g POWERLEVEL9K_VCS_MODIFIED_FOREGROUND=#191726
+typeset -g POWERLEVEL9K_VCS_UNTRACKED_BACKGROUND=#f6c177
+typeset -g POWERLEVEL9K_VCS_UNTRACKED_FOREGROUND=#191726
+typeset -g POWERLEVEL9K_VCS_CONFLICTED_BACKGROUND=#f6c177
+typeset -g POWERLEVEL9K_VCS_CONFLICTED_FOREGROUND=#191726
+typeset -g POWERLEVEL9K_VCS_LOADING_BACKGROUND=#f6c177
+typeset -g POWERLEVEL9K_VCS_LOADING_FOREGROUND=#191726
+
+# green    -> node_version, nodenv, nvm, nodeenv …
+typeset -g POWERLEVEL9K_NODE_VERSION_BACKGROUND=#a3be8c
+typeset -g POWERLEVEL9K_NODE_VERSION_FOREGROUND=#191726
+typeset -g POWERLEVEL9K_NODENV_BACKGROUND=#a3be8c
+typeset -g POWERLEVEL9K_NODENV_FOREGROUND=#191726
+typeset -g POWERLEVEL9K_NVM_BACKGROUND=#a3be8c
+typeset -g POWERLEVEL9K_NVM_FOREGROUND=#191726
+typeset -g POWERLEVEL9K_NODEENV_BACKGROUND=#a3be8c
+typeset -g POWERLEVEL9K_NODEENV_FOREGROUND=#191726
+typeset -g POWERLEVEL9K_RUST_VERSION_BACKGROUND=#a3be8c
+typeset -g POWERLEVEL9K_RUST_VERSION_FOREGROUND=#191726
+typeset -g POWERLEVEL9K_RUSTUP_BACKGROUND=#a3be8c
+typeset -g POWERLEVEL9K_RUSTUP_FOREGROUND=#191726
+typeset -g POWERLEVEL9K_GO_VERSION_BACKGROUND=#a3be8c
+typeset -g POWERLEVEL9K_GO_VERSION_FOREGROUND=#191726
+typeset -g POWERLEVEL9K_GOENV_BACKGROUND=#a3be8c
+typeset -g POWERLEVEL9K_GOENV_FOREGROUND=#191726
+typeset -g POWERLEVEL9K_JAVA_VERSION_BACKGROUND=#a3be8c
+typeset -g POWERLEVEL9K_JAVA_VERSION_FOREGROUND=#191726
+typeset -g POWERLEVEL9K_JENV_BACKGROUND=#a3be8c
+typeset -g POWERLEVEL9K_JENV_FOREGROUND=#191726
+typeset -g POWERLEVEL9K_PHP_VERSION_BACKGROUND=#a3be8c
+typeset -g POWERLEVEL9K_PHP_VERSION_FOREGROUND=#191726
+typeset -g POWERLEVEL9K_PHPENV_BACKGROUND=#a3be8c
+typeset -g POWERLEVEL9K_PHPENV_FOREGROUND=#191726
+typeset -g POWERLEVEL9K_KOTLIN_VERSION_BACKGROUND=#a3be8c
+typeset -g POWERLEVEL9K_KOTLIN_VERSION_FOREGROUND=#191726
+typeset -g POWERLEVEL9K_HASKELL_STACK_BACKGROUND=#a3be8c
+typeset -g POWERLEVEL9K_HASKELL_STACK_FOREGROUND=#191726
+typeset -g POWERLEVEL9K_RBENV_BACKGROUND=#a3be8c
+typeset -g POWERLEVEL9K_RBENV_FOREGROUND=#191726
+typeset -g POWERLEVEL9K_LUAENV_BACKGROUND=#a3be8c
+typeset -g POWERLEVEL9K_LUAENV_FOREGROUND=#191726
+
+# sapphire -> virtualenv, anaconda, pyenv, docker_context
+typeset -g POWERLEVEL9K_VIRTUALENV_BACKGROUND=#569fba
+typeset -g POWERLEVEL9K_VIRTUALENV_FOREGROUND=#191726
+typeset -g POWERLEVEL9K_ANACONDA_BACKGROUND=#569fba
+typeset -g POWERLEVEL9K_ANACONDA_FOREGROUND=#191726
+typeset -g POWERLEVEL9K_PYENV_BACKGROUND=#569fba
+typeset -g POWERLEVEL9K_PYENV_FOREGROUND=#191726
+typeset -g POWERLEVEL9K_DOCKER_CONTEXT_BACKGROUND=#569fba
+typeset -g POWERLEVEL9K_DOCKER_CONTEXT_FOREGROUND=#191726
+
+# lavender -> command_execution_time
+typeset -g POWERLEVEL9K_COMMAND_EXECUTION_TIME_BACKGROUND=#c4a7e7
+typeset -g POWERLEVEL9K_COMMAND_EXECUTION_TIME_FOREGROUND=#191726
+
+# ❯ takes the same green and red as the rest of the strip.
+typeset -g POWERLEVEL9K_PROMPT_CHAR_OK_{VIINS,VICMD,VIVIS,VIOWR}_FOREGROUND=#a3be8c
+typeset -g POWERLEVEL9K_PROMPT_CHAR_ERROR_{VIINS,VICMD,VIVIS,VIOWR}_FOREGROUND=#eb6f92
+
+# Status is not a capsule in this config -- failure shows on ❯ instead.
+typeset -g POWERLEVEL9K_STATUS_OK=false
+typeset -g POWERLEVEL9K_STATUS_ERROR=false

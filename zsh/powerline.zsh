@@ -21,16 +21,49 @@ _powerline_dir=$HOME/.config/themes
 #
 # _powerline_applied records WHICH files were loaded, by resolved path, so the
 # hook below can tell whether the symlinks have moved since.
+# The VCS segment does not take its colour from POWERLEVEL9K_VCS_*_FOREGROUND.
+# ~/.p10k.zsh defines my_git_formatter(), which builds the branch and the dirty
+# markers with its OWN inline escapes -- %7F for the meta text, %0F for the
+# branch -- and feeds them through VCS_CONTENT_EXPANSION. Those inline codes win
+# over the segment foreground, which is why setting it appears to do nothing.
+#
+# So rewrite the codes in the stored function body. The pristine body is kept on
+# first sight, and every reload re-derives from it, so a theme that does not set
+# _thm_git_text gets the original back rather than the previous theme's colour.
+_powerline_git_colors() {
+  emulate -L zsh
+  (( $+functions[my_git_formatter] )) || return 0
+  : ${_powerline_git_fmt_orig:=$functions[my_git_formatter]}
+  local body=$_powerline_git_fmt_orig
+  if [[ -n $_thm_git_text ]]; then
+    local c="%F{$_thm_git_text}"
+    body=${body//\%7F/$c}
+    body=${body//\%0F/$c}
+  fi
+  functions[my_git_formatter]=$body
+}
+
 _powerline_load() {
   emulate -L zsh
   local t=$_powerline_dir/current b=$_powerline_dir/current-bar
+  # Cleared first: a theme that does not set it must not inherit the last one's.
+  unset _thm_git_text
   # 1. palette   — defines _thm_<role> and _thm_ansi0-15
   [[ -r $t/p10k.zsh ]] && source $t/p10k.zsh
-  # 2. colours   — the segment scheme, written against _thm_* so one file
-  #                serves every theme.
+  # 2. colours   — the shared scheme, written against _thm_* so one file serves
+  #                every theme...
   [[ -r $_powerline_dir/p10k-colors.zsh ]] && source $_powerline_dir/p10k-colors.zsh
+  #                ...then this theme's own per-segment hues, taken from the
+  #                prompt config its project publishes. Overrides the shared
+  #                file for the segments it names; optional, a theme without one
+  #                just keeps the shared scheme.
+  [[ -r $t/p10k-colors.zsh ]] && source $t/p10k-colors.zsh
   # 3. geometry  — separators and caps, and for `minimal` the un-filling
   [[ -r $b/p10k.zsh ]] && source $b/p10k.zsh
+  # 4. layout    — which segments, in what order, and how each is rendered.
+  #                Last, so it can override a separator the bar chose.
+  [[ -r $HOME/.config/zsh/p10k-layout.zsh ]] && source $HOME/.config/zsh/p10k-layout.zsh
+  _powerline_git_colors
   _powerline_applied="${t:A}|${b:A}"
 }
 
