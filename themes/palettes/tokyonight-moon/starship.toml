@@ -1,0 +1,45 @@
+# tokyonight-moon — Starship palette
+#
+# Straight from the Tokyo Night Starship config. Unlike the other palettes here
+# this one is not a row of accents: it is a graduated descent, with #769ff0
+# reused as the TEXT on the dark half, which is what ties the cascade together.
+#
+#   #a3aed2  light plate   os icon          text #090c0c
+#   #769ff0  blue          directory        text #e3e5e5
+#   #394260  navy          git              text #769ff0
+#   #212736  darker navy   languages, envs  text #769ff0
+#   #1d2230  darkest       duration         text #a0a9cb
+#
+# Two of the config's own pairings are low contrast and are kept as written:
+# directory is #e3e5e5 on #769ff0 at 2.08:1, and git is #769ff0 on #394260 at
+# 3.76:1. Setting on_peach to #1b1d2b would take the directory to 6.3:1, and
+# on_yellow to #9ab8ff would take git to 5.03:1, if either reads badly.
+#
+# The table is named `theme`, not after the colourscheme, so every bar file can
+# say `palette = "theme"` without knowing which one is loaded. This file holds
+# nothing but the table: TOML requires top-level keys before any table, and the
+# bar half supplies those.
+
+[palettes.theme]
+red       = "#a3aed2"
+peach     = "#769ff0"
+yellow    = "#394260"
+green     = "#212736"
+sapphire  = "#212736"
+lavender  = "#1d2230"
+crust     = "#090c0c"
+
+# Text on each fill — a different colour per segment in this config.
+on_red      = "#090c0c"
+on_peach    = "#e3e5e5"
+on_yellow   = "#769ff0"
+on_green    = "#769ff0"
+on_sapphire = "#769ff0"
+on_lavender = "#a0a9cb"
+
+# The prompt character. Separate from the fills: a fill role can legitimately be
+# a dark plate — tokyonight's `green` is a navy language block — and the ❯ sits
+# on the terminal background, where that would be invisible.
+ok          = "#c3e88d"
+err         = "#ff757f"
+info        = "#82aaff"

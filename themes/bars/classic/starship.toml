@@ -1,0 +1,171 @@
+# Classic powerline bar — Starship
+#
+# Shape only. Colours are palette NAMES, defined by whichever palette theme-set
+# has selected, so this one file works with every theme:
+#
+#   red peach yellow green sapphire lavender     the six fills
+#   on_red on_peach on_yellow ...                the text on each fill
+#
+# The text is a per-slot role rather than one global colour because some
+# presets use a different foreground per segment.
+#
+# Solid arrows throughout, flat ends.
+#
+# Composed with themes/current/starship.toml by themes/starship-build.
+# Switch with `bar-set classic`.
+
+"$schema" = 'https://starship.rs/config-schema.json'
+
+palette = "theme"
+
+format = """
+$os\
+[](bg:peach fg:red)\
+$directory\
+[](bg:yellow fg:peach)\
+$git_branch\
+$git_status\
+[](fg:yellow bg:green)\
+$nodejs\
+$bun\
+$rust\
+$golang\
+$php\
+$java\
+$kotlin\
+$haskell\
+$python\
+$c\
+[](fg:green bg:sapphire)\
+$conda\
+$docker_context\
+[](fg:sapphire bg:lavender)\
+$cmd_duration\
+[](fg:lavender)\
+$line_break\
+$character"""
+
+[os]
+disabled = false
+style = "bg:red fg:on_red"
+
+[os.symbols]
+Macos = ""
+Linux = "󰌽"
+Arch = "󰣇"
+Debian = "󰣚"
+Ubuntu = "󰕈"
+Fedora = "󰣛"
+Manjaro = ""
+Mint = "󰣭"
+Alpine = ""
+Raspbian = "󰐿"
+Gentoo = "󰣨"
+CentOS = ""
+Redhat = "󱄛"
+RedHatEnterprise = "󱄛"
+SUSE = ""
+Windows = ""
+Android = ""
+
+[directory]
+style = "bg:peach fg:on_peach"
+format = "[ $path ]($style)"
+truncation_length = 3
+truncation_symbol = "…/"
+
+[directory.substitutions]
+"Documents" = "󰈙 "
+"Downloads" = " "
+"Music" = "󰝚 "
+"Pictures" = " "
+"Developer" = "󰲋 "
+
+[git_branch]
+symbol = ""
+style = "bg:yellow"
+format = '[[ $symbol $branch ](fg:on_yellow bg:yellow)]($style)'
+
+[git_status]
+style = "bg:yellow"
+format = '[[($all_status$ahead_behind )](fg:on_yellow bg:yellow)]($style)'
+
+[nodejs]
+symbol = ""
+style = "bg:green"
+format = '[[ $symbol( $version) ](fg:on_green bg:green)]($style)'
+
+[bun]
+symbol = ""
+style = "bg:green"
+format = '[[ $symbol( $version) ](fg:on_green bg:green)]($style)'
+
+[rust]
+symbol = ""
+style = "bg:green"
+format = '[[ $symbol( $version) ](fg:on_green bg:green)]($style)'
+
+[golang]
+symbol = ""
+style = "bg:green"
+format = '[[ $symbol( $version) ](fg:on_green bg:green)]($style)'
+
+[php]
+symbol = ""
+style = "bg:green"
+format = '[[ $symbol( $version) ](fg:on_green bg:green)]($style)'
+
+[java]
+symbol = " "
+style = "bg:green"
+format = '[[ $symbol( $version) ](fg:on_green bg:green)]($style)'
+
+[kotlin]
+symbol = ""
+style = "bg:green"
+format = '[[ $symbol( $version) ](fg:on_green bg:green)]($style)'
+
+[haskell]
+symbol = ""
+style = "bg:green"
+format = '[[ $symbol( $version) ](fg:on_green bg:green)]($style)'
+
+[python]
+symbol = ""
+style = "bg:green"
+format = '[[ $symbol( $version) ](fg:on_green bg:green)]($style)'
+
+[c]
+symbol = " "
+style = "bg:green"
+format = '[[ $symbol( $version) ](fg:on_green bg:green)]($style)'
+
+[conda]
+symbol = " "
+style = "fg:on_sapphire bg:sapphire"
+format = '[$symbol$environment ]($style)'
+ignore_base = false
+
+[docker_context]
+symbol = ""
+style = "bg:sapphire"
+format = '[[ $symbol( $context) ](fg:on_sapphire bg:sapphire)]($style)'
+
+[cmd_duration]
+min_time = 500
+style = "bg:lavender"
+format = '[[  $duration ](fg:on_lavender bg:lavender)]($style)'
+disabled = false
+
+# Two lines: the strip, then what you type on its own line below it.
+[line_break]
+disabled = false
+
+[character]
+disabled = false
+success_symbol = '[ ❯](bold fg:ok)'
+error_symbol = '[ ❯](bold fg:err)'
+vimcmd_symbol = '[ ❮](bold fg:ok)'
+vimcmd_replace_one_symbol = '[ ❮](bold fg:info)'
+vimcmd_replace_symbol = '[ ❮](bold fg:info)'
+vimcmd_visual_symbol = '[ ❮](bold fg:info)'

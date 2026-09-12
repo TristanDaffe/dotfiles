@@ -1,0 +1,38 @@
+# catppuccin-mocha — Starship palette
+#
+# The six roles the bar files reference, from the Catppuccin Mocha palette:
+#
+#   red / peach / yellow / green / sapphire / lavender, verbatim
+#
+# crust is the text on every filled segment.
+#
+# The table is named `theme`, not after the colourscheme, so every bar file
+# can say `palette = "theme"` without knowing which one is loaded. This file
+# holds nothing but the table: TOML requires top-level keys before any table,
+# and the bar half supplies those.
+
+[palettes.theme]
+red       = "#f38ba8"
+peach     = "#fab387"
+yellow    = "#f9e2af"
+green     = "#a6e3a1"
+sapphire  = "#74c7ec"
+lavender  = "#b4befe"
+crust     = "#11111b"
+
+# Text on each fill. This palette uses one dark colour throughout, so they
+# all resolve to crust; a preset with a different foreground per segment sets
+# them individually (see tokyonight-moon).
+on_red       = "#11111b"
+on_peach     = "#11111b"
+on_yellow    = "#11111b"
+on_green     = "#11111b"
+on_sapphire  = "#11111b"
+on_lavender  = "#11111b"
+
+# The prompt character. Separate from the fills: a fill role can legitimately be
+# a dark plate — tokyonight's `green` is a navy language block — and the ❯ sits
+# on the terminal background, where that would be invisible.
+ok          = "#a6e3a1"
+err         = "#f38ba8"
+info        = "#b4befe"

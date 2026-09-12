@@ -1,0 +1,46 @@
+# gruvbox — Starship palette
+#
+# The six roles the bar files reference, from the gruvbox bright palette:
+#
+#   red / orange / yellow / aqua / blue / purple
+#
+# crust is the text on every filled segment.
+#
+# The dim half is unusable as a fill -- #d65d0e reaches 3.4:1 under fg0
+# and 3.8:1 under the background -- so these are the bright shades.
+# gruvbox's own Starship preset puts ORANGE in the os slot rather than red;
+# swap red and peach below if you want that exactly.
+#
+# crust is bg0_hard (#1d2021), not the background bg0 (#282828): gruvbox's
+# bright red only reaches 4.29:1 against bg0, and 4.77:1 against bg0_hard.
+#
+# The table is named `theme`, not after the colourscheme, so every bar file
+# can say `palette = "theme"` without knowing which one is loaded. This file
+# holds nothing but the table: TOML requires top-level keys before any table,
+# and the bar half supplies those.
+
+[palettes.theme]
+red       = "#fb4934"
+peach     = "#fe8019"
+yellow    = "#fabd2f"
+green     = "#8ec07c"
+sapphire  = "#83a598"
+lavender  = "#d3869b"
+crust     = "#1d2021"
+
+# Text on each fill. This palette uses one dark colour throughout, so they
+# all resolve to crust; a preset with a different foreground per segment sets
+# them individually (see tokyonight-moon).
+on_red       = "#1d2021"
+on_peach     = "#1d2021"
+on_yellow    = "#1d2021"
+on_green     = "#1d2021"
+on_sapphire  = "#1d2021"
+on_lavender  = "#1d2021"
+
+# The prompt character. Separate from the fills: a fill role can legitimately be
+# a dark plate — tokyonight's `green` is a navy language block — and the ❯ sits
+# on the terminal background, where that would be invisible.
+ok          = "#b8bb26"
+err         = "#fb4934"
+info        = "#83a598"

@@ -1,0 +1,38 @@
+# dracula — Starship palette
+#
+# The six roles the bar files reference, from the official Dracula spec:
+#
+#   red / orange / yellow / green / cyan / purple
+#
+# crust is the text on every filled segment.
+#
+# The table is named `theme`, not after the colourscheme, so every bar file
+# can say `palette = "theme"` without knowing which one is loaded. This file
+# holds nothing but the table: TOML requires top-level keys before any table,
+# and the bar half supplies those.
+
+[palettes.theme]
+red       = "#ff5555"
+peach     = "#ffb86c"
+yellow    = "#f1fa8c"
+green     = "#50fa7b"
+sapphire  = "#8be9fd"
+lavender  = "#bd93f9"
+crust     = "#21222c"
+
+# Text on each fill. This palette uses one dark colour throughout, so they
+# all resolve to crust; a preset with a different foreground per segment sets
+# them individually (see tokyonight-moon).
+on_red       = "#21222c"
+on_peach     = "#21222c"
+on_yellow    = "#21222c"
+on_green     = "#21222c"
+on_sapphire  = "#21222c"
+on_lavender  = "#21222c"
+
+# The prompt character. Separate from the fills: a fill role can legitimately be
+# a dark plate — tokyonight's `green` is a navy language block — and the ❯ sits
+# on the terminal background, where that would be invisible.
+ok          = "#50fa7b"
+err         = "#ff5555"
+info        = "#bd93f9"

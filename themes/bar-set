@@ -192,6 +192,20 @@ else
     echo '  tmux: not running, applies on next start'
 fi
 
+# starship: no reload needed. It re-reads its config on every prompt, so the
+# next prompt in every open shell is already correct. The two halves cannot be
+# symlinked the way kitty/tmux/nvim are -- one process, one file, no include --
+# so they are composed into ~/.config/starship.toml instead.
+if [ -x "$THEMES_DIR/starship-build" ]; then
+    if "$THEMES_DIR/starship-build" 2>/dev/null; then
+        if command -v starship >/dev/null 2>&1; then
+            echo '  starship: rebuilt, applies at the next prompt'
+        else
+            echo '  starship: rebuilt (starship not installed yet)'
+        fi
+    fi
+fi
+
 # zsh: Powerlevel10k reads its config once at startup, and there is no safe way
 # to reach other running shells (SIGUSR1 kills any zsh that has no trap for it),
 # so state the manual step instead of guessing.

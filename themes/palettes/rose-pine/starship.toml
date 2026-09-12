@@ -1,0 +1,42 @@
+# rose-pine — Starship palette
+#
+# The six roles the bar files reference, from the Rosé Pine palette:
+#
+#   love / rose / gold / foam / pine / iris
+#
+# crust is the text on every filled segment.
+#
+# Rosé Pine has six hues and pine, the natural sapphire, is too dark to be
+# a fill at 3.4:1. The sapphire slot uses pine's Moon shade #3e8fb0 (4.84:1),
+# still Rosé Pine's own colour.
+#
+# The table is named `theme`, not after the colourscheme, so every bar file
+# can say `palette = "theme"` without knowing which one is loaded. This file
+# holds nothing but the table: TOML requires top-level keys before any table,
+# and the bar half supplies those.
+
+[palettes.theme]
+red       = "#eb6f92"
+peach     = "#ebbcba"
+yellow    = "#f6c177"
+green     = "#9ccfd8"
+sapphire  = "#3e8fb0"
+lavender  = "#c4a7e7"
+crust     = "#191724"
+
+# Text on each fill. This palette uses one dark colour throughout, so they
+# all resolve to crust; a preset with a different foreground per segment sets
+# them individually (see tokyonight-moon).
+on_red       = "#191724"
+on_peach     = "#191724"
+on_yellow    = "#191724"
+on_green     = "#191724"
+on_sapphire  = "#191724"
+on_lavender  = "#191724"
+
+# The prompt character. Separate from the fills: a fill role can legitimately be
+# a dark plate — tokyonight's `green` is a navy language block — and the ❯ sits
+# on the terminal background, where that would be invisible.
+ok          = "#9ccfd8"
+err         = "#eb6f92"
+info        = "#c4a7e7"
