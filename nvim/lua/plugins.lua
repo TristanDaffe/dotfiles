@@ -1,3 +1,5 @@
+vim.g.vimtex_view_method = 'skim'
+
 vim.pack.add({
     { src = "https://github.com/folke/tokyonight.nvim" },
     { src = "https://github.com/rose-pine/neovim", name = "rose-pine" },
@@ -25,6 +27,7 @@ vim.pack.add({
     { src = "https://github.com/L3MON4D3/LuaSnip" },
     { src = "https://github.com/saadparwaiz1/cmp_luasnip" },
     { src = "https://github.com/tpope/vim-obsession.git" },
+    { src = "https://github.com/lervag/vimtex", version = "v2.18" },
 })
 
 local map = vim.keymap.set

@@ -12,4 +12,6 @@ require('catppuccin').setup({
     },
 })
 vim.cmd.colorscheme('catppuccin-mocha')
-return 'catppuccin'
+-- Flavour-specific: catppuccin ships catppuccin-mocha.lua, not a generic
+-- catppuccin.lua, so the bare name silently falls back to `auto`.
+return 'catppuccin-mocha'

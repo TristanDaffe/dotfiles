@@ -156,6 +156,11 @@
     "vim-obsession": {
       "rev": "5d63e5b50ebf554d378528e357157c89e91313c9",
       "src": "https://github.com/tpope/vim-obsession.git"
+    },
+    "vimtex": {
+      "rev": "cb1374f1f3f9717ea91787c54dc11031d673aea5",
+      "src": "https://github.com/lervag/vimtex",
+      "version": "'v2.18'"
     }
   }
 }
