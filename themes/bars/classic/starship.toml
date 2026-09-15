@@ -48,6 +48,9 @@ $character"""
 [os]
 disabled = false
 style = "bg:red fg:on_red"
+# Padded like every other segment: without a format the module falls back to
+# starship's default "[$symbol]($style)" and the logo sits flush on the edge.
+format = "[ $symbol ]($style)"
 
 [os.symbols]
 Macos = ""
