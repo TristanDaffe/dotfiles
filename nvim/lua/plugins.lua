@@ -1,4 +1,18 @@
-vim.g.vimtex_view_method = 'skim'
+-- bookokrat renders the PDF in a tmux pane via kitty graphics (needs
+-- allow-passthrough on in tmux.conf). --synctex-forward talks to a running
+-- instance over a unix socket and exits 1 when there is none, so the || opens
+-- the pane the first time and later calls jump the open viewer to the cursor.
+-- BOOKOKRAT_PROTOCOL is forced because bookokrat's auto-detection picks the
+-- wrong protocol inside tmux and renders a blank page; kittyv2 is what it
+-- correctly chooses on its own outside tmux. The pane is NOT opened with -d:
+-- bookokrat probes the terminal and reads kitty's replies, and tmux delivers
+-- terminal input only to the active pane, so an unfocused viewer never hears
+-- back, falls back to chunked transfer and renders a blank page.
+vim.g.vimtex_view_method = 'general'
+vim.g.vimtex_view_general_viewer = 'bookokrat'
+vim.g.vimtex_view_general_options =
+    '--synctex-forward @line:@col:@tex @pdf'
+    .. ' || tmux split-window -h -l 45% -e BOOKOKRAT_PROTOCOL=kittyv2 bookokrat @pdf'
 
 vim.pack.add({
     { src = "https://github.com/folke/tokyonight.nvim" },
