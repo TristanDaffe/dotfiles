@@ -33,15 +33,10 @@ function M.reload()
     local name = M.load()
     if M.lualine_opts then
         M.lualine_opts.options.theme = name
-        local ok, lualine = pcall(require, 'lualine')
-        if ok then
-            lualine.setup(M.lualine_opts)
-        end
+        require('lualine').setup(M.lualine_opts)
     end
 end
 
-vim.api.nvim_create_user_command('ThemeReload', function()
-    M.reload()
-end, { desc = 'Re-read ~/.config/themes/current' })
+vim.api.nvim_create_user_command('ThemeReload', M.reload, { desc = 'Re-read ~/.config/themes/current' })
 
 return M

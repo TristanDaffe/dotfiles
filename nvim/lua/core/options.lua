@@ -15,7 +15,6 @@ vim.opt.colorcolumn = "120"
 vim.opt.winborder = "rounded"
 vim.opt.showmatch = true
 vim.opt.matchtime = 2
-vim.opt.cmdheight = 1
 vim.opt.equalalways = false
 
 -- Tab
@@ -24,12 +23,10 @@ vim.opt.shiftwidth = 4
 vim.opt.softtabstop = 4
 vim.opt.expandtab = true
 vim.opt.smartindent = true
-vim.opt.autoindent = true
 
 -- Search
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
-vim.opt.incsearch = true
 
 -- Autocomplete
 vim.opt.completeopt = "menuone,noinsert,noselect"
@@ -41,17 +38,11 @@ vim.opt.updatetime = 300
 -- File
 vim.opt.undofile = true
 vim.opt.undodir = vim.fn.expand("~/.vim/undodir")
-vim.opt.autoread = true
-vim.opt.autowrite = false
 
 -- Other
-vim.opt.backspace = "indent,eol,start"
 vim.opt.mouse = "a"
 vim.opt.clipboard:append("unnamedplus")
-vim.opt.encoding = "UTF-8"
-vim.opt.timeout = true
 vim.opt.timeoutlen = 300
-vim.opt.ttimeout = true
 vim.opt.ttimeoutlen = 10
 
 -- Split
@@ -62,3 +53,7 @@ vim.g.mapleader = " "
 -- vimtex leader for Belgian keyboard layout
 vim.g.maplocalleader = ","
 
+
+-- No empty/nofile windows (NvimTree) or terminals in sessions: tmux-resurrect
+-- restores via `nvim -S`, which would otherwise re-run terminal commands.
+vim.opt.sessionoptions:remove({ "blank", "terminal" })
