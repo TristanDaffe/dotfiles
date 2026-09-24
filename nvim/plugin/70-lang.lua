@@ -9,4 +9,8 @@ vim.pack.add({
     -- Started per project from ftplugin/java.lua (lua/lang/java.lua).
     { src = 'https://github.com/mfussenegger/nvim-jdtls' },
     { src = 'https://github.com/lervag/vimtex', version = 'v2.18' },
+    -- Detects playbooks/roles as yaml.ansible, K runs ansible-doc.
+    { src = 'https://github.com/mfussenegger/nvim-ansible' },
 })
+
+vim.filetype.add({ extension = { j2 = 'jinja' } })

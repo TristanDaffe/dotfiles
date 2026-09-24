@@ -13,7 +13,7 @@ local SERVERS = {
 }
 
 local MASON = {
-    'lua-language-server', 'yaml-language-server', 'bash-language-server', 'ansible-language-server',
+    'lua-language-server', 'yaml-language-server', 'bash-language-server', 'ansible-language-server', 'ansible-lint',
     'angular-language-server', 'typescript-language-server', 'html-lsp', 'css-lsp',
     'graphql-language-service-cli', 'protols',
     'jdtls', 'java-debug-adapter', 'java-test',

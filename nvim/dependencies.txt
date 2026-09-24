@@ -33,3 +33,7 @@ brew install gradle
 ## web
 # GraphQL completion reads the schema named in the project's graphql.config.*,
 # so a project pointing at a local backend needs that backend running.
+
+## ansible
+brew install ansible       # ansible-doc (K) and ansible-playbook (<leader>ar)
+brew install ansible-lint  # ansiblels lint diagnostics; without it only syntax is checked

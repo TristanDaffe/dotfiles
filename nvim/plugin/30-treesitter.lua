@@ -5,4 +5,5 @@ vim.pack.add({ { src = 'https://github.com/nvim-treesitter/nvim-treesitter', ver
 require('nvim-treesitter').install({
     'lua', 'vim', 'vimdoc', 'bash', 'yaml', 'json', 'sql',
     'java', 'proto', 'html', 'css', 'javascript', 'typescript', 'tsx', 'graphql',
+    'jinja', 'jinja_inline',
 })

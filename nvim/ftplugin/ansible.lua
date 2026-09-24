@@ -1,0 +1,5 @@
+vim.keymap.set('n', '<leader>ar', function()
+    vim.cmd.write()
+    require('ansible').run()
+end, { buffer = true, desc = 'Ansible: run playbook/role' })
+vim.keymap.set('x', '<leader>ar', function() require('ansible').run() end, { buffer = true, desc = 'Ansible: run selected tasks' })
