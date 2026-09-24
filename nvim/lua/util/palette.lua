@@ -112,6 +112,4 @@ function M.open(filter)
     }):find()
 end
 
-vim.keymap.set('n', '<leader>t', function() M.open() end, { desc = 'Action palette' })
-
 return M

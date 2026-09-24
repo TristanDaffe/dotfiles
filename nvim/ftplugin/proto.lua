@@ -1,1 +1,1 @@
-require('core.lsp').grep_usages(0)
+require('util.lsp').grep_usages(0)

@@ -1,7 +1,7 @@
 # Bootstrap dependencies (install before first launch)
 #
-# Language servers and DAP adapters are listed in lua/core/lsp.lua (MASON) and
-# parsers in lua/core/plugins.lua; both install on first launch. Only what Mason
+# Language servers and DAP adapters are listed in plugin/50-lsp.lua (MASON) and
+# parsers in plugin/30-treesitter.lua; both install on first launch. Only what Mason
 # cannot provide is listed here.
 
 ## core
@@ -17,13 +17,13 @@ brew install maven
 brew install gradle
 # python3 (macOS ships one) runs Mason's jdtls wrapper
 #
-# Project JDKs are hardcoded in ftplugin/java.lua under `runtimes` - adjust when
-# a JDK moves or is uninstalled:
+# Project JDKs are looked up in lua/lang/java.lua under `runtimes`; missing ones
+# are skipped:
 #   JavaSE-21   /opt/homebrew/opt/openjdk@21
 #   JavaSE-17   /opt/homebrew/opt/openjdk@17
-#   JavaSE-1.8  ~/Library/Java/JavaVirtualMachines/corretto-1.8.0_482
+#   JavaSE-1.8  ~/Library/Java/JavaVirtualMachines/corretto-1.8*
 #
-# Lombok ships with Mason's jdtls package; ftplugin/java.lua wires it in.
+# Lombok ships with Mason's jdtls package; lua/lang/java.lua wires it in.
 
 ## proto
 # protols finds the well-known types (google/protobuf/*.proto) through

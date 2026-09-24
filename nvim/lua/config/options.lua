@@ -37,7 +37,6 @@ vim.opt.updatetime = 300
 
 -- File
 vim.opt.undofile = true
-vim.opt.undodir = vim.fn.expand("~/.vim/undodir")
 
 -- Other
 vim.opt.mouse = "a"
@@ -48,11 +47,6 @@ vim.opt.ttimeoutlen = 10
 -- Split
 vim.opt.splitbelow = true
 vim.opt.splitright = true
-
-vim.g.mapleader = " "
--- vimtex leader for Belgian keyboard layout
-vim.g.maplocalleader = ","
-
 
 -- No empty/nofile windows (NvimTree) or terminals in sessions: tmux-resurrect
 -- restores via `nvim -S`, which would otherwise re-run terminal commands.

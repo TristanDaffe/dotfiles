@@ -1,5 +1,10 @@
+vim.pack.add({
+    { src = 'https://github.com/neovim/nvim-lspconfig' },
+    { src = 'https://github.com/mason-org/mason.nvim' },
+})
+
 -- Server defaults come from nvim-lspconfig; overrides live in after/lsp/<name>.lua.
--- jdtls is started per project by nvim-jdtls (ftplugin/java.lua), so it is
+-- jdtls is started per project by nvim-jdtls (lua/lang/java.lua), so it is
 -- installed but not enabled here.
 local SERVERS = {
     'lua_ls', 'yamlls', 'bashls', 'ansiblels',
@@ -28,20 +33,6 @@ vim.keymap.set('n', '<leader>m', ':Mason<CR>', { desc = 'Open Mason' })
 
 vim.lsp.enable(SERVERS)
 
-local M = {}
-
--- Proto and GraphQL names are used from generated Java/TS, which the schema's
--- own server cannot see: gr greps the whole project for the word instead.
-function M.grep_usages(buf)
-    vim.keymap.set('n', 'gr', function()
-        require('telescope.builtin').grep_string({
-            search = vim.fn.expand('<cword>'),
-            word_match = '-w',
-            cwd = vim.fs.root(0, { '.git' }) or vim.fn.getcwd(),
-        })
-    end, { buffer = buf, desc = 'Usages project-wide' })
-end
-
 local function has_buf_map(buf, lhs)
     for _, m in ipairs(vim.api.nvim_buf_get_keymap(buf, 'n')) do
         if m.lhs == lhs then return true end
@@ -50,6 +41,7 @@ local function has_buf_map(buf, lhs)
 end
 
 vim.api.nvim_create_autocmd('LspAttach', {
+    group = vim.api.nvim_create_augroup('user.lsp', { clear = true }),
     callback = function(args)
         local function map(key, fn, desc)
             vim.keymap.set('n', key, fn, { buffer = args.buf, desc = 'LSP: ' .. desc })
@@ -68,8 +60,8 @@ vim.api.nvim_create_autocmd('LspAttach', {
 })
 
 vim.diagnostic.config({
-    underline = true,
     virtual_text = true,
+    severity_sort = true,
     signs = {
         text = {
             [vim.diagnostic.severity.ERROR] = '󰅚 ',
@@ -79,13 +71,7 @@ vim.diagnostic.config({
         },
     },
     float = {
-        show_header = true,
         source = 'if_many',
-        border = 'rounded',
         focusable = false,
     },
-    update_in_insert = false,
-    severity_sort = false,
 })
-
-return M

@@ -24,20 +24,17 @@ map('n', '<M-k>', '<C-w>k', { desc = 'Layer 1: focus split up' })
 map('n', '<M-l>', '<C-w>l', { desc = 'Layer 1: focus split right' })
 
 -- resize: Shift + hjkl.  H/J shrink, K/L grow.
--- Shift alone would shadow H/L (screen top/bottom), J (join), K (LSP hover).
 map('n', '<M-S-h>', ':vertical resize -2<CR>', { desc = 'Layer 1: split narrower' })
 map('n', '<M-S-l>', ':vertical resize +2<CR>', { desc = 'Layer 1: split wider' })
 map('n', '<M-S-k>', ':resize +2<CR>',          { desc = 'Layer 1: split taller' })
 map('n', '<M-S-j>', ':resize -2<CR>',          { desc = 'Layer 1: split shorter' })
 
 -- move the split itself: m then hjkl
+-- TODO not working
 map('n', '<M-m>h', '<C-w>H', { desc = 'Layer 1: move split far left' })
 map('n', '<M-m>j', '<C-w>J', { desc = 'Layer 1: move split to bottom' })
 map('n', '<M-m>k', '<C-w>K', { desc = 'Layer 1: move split to top' })
 map('n', '<M-m>l', '<C-w>L', { desc = 'Layer 1: move split far right' })
-
--- close: x
-map('n', '<M-x>', '<C-w>c', { desc = 'Layer 1: close split' })
 
 -- split: leader s + h/v, and ss to even out every split
 map('n', '<leader>sv', ':vsplit<CR>', { desc = 'Split window vertically' })
@@ -49,42 +46,9 @@ map('t', '<Esc>', [[<C-\><C-n>]], { desc = 'Exit terminal mode', silent = true }
 
 -- Toggle a bottom terminal. Alt layer like the split keys: <C-t> is the LSP
 -- tag-stack return, insert-mode indent and the shell's own Ctrl-T.
-local term = { buf = -1, win = -1 }
-map({ 'n', 't' }, '<M-t>', function()
-    if vim.api.nvim_win_is_valid(term.win) then
-        return vim.api.nvim_win_hide(term.win)
-    end
-    vim.cmd('botright 15split')
-    term.win = vim.api.nvim_get_current_win()
-    if vim.api.nvim_buf_is_valid(term.buf) then
-        vim.api.nvim_win_set_buf(term.win, term.buf)
-    else
-        vim.cmd.terminal()
-        term.buf = vim.api.nvim_get_current_buf()
-    end
-    vim.cmd.startinsert()
-end, { desc = 'Toggle terminal' })
+map({ 'n', 't' }, '<M-t>', function() require('util.terminal').toggle() end, { desc = 'Toggle terminal' })
+
+map('n', '<leader>t', function() require('util.palette').open() end, { desc = 'Action palette' })
 
 -- Clear search highlight on <Esc>
 map('n', '<Esc>', ':nohlsearch<CR>', { desc = 'Clear search highlight', silent = true })
-
--- Restore cursor to last position when reopening a file
--- (skip transient git/hg/svn files so rebase/commit always start at line 1)
-local skip_ft = { gitcommit = true, gitrebase = true, hgcommit = true, svn = true }
-local skip_name = {
-    ['COMMIT_EDITMSG']  = true,
-    ['MERGE_MSG']       = true,
-    ['TAG_EDITMSG']     = true,
-    ['git-rebase-todo'] = true,
-}
-vim.api.nvim_create_autocmd('BufReadPost', {
-    callback = function(args)
-        if skip_ft[vim.bo[args.buf].filetype] then return end
-        if skip_name[vim.fs.basename(args.file)] then return end
-        local mark = vim.api.nvim_buf_get_mark(args.buf, '"')
-        local line_count = vim.api.nvim_buf_line_count(args.buf)
-        if mark[1] > 0 and mark[1] <= line_count then
-            pcall(vim.api.nvim_win_set_cursor, 0, mark)
-        end
-    end,
-})

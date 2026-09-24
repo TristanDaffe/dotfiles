@@ -10,8 +10,7 @@ local M = {}
 local CURRENT = vim.fn.expand('~/.config/themes/current')
 local FALLBACK = 'tokyonight'
 
--- Set by plugins.lua so a reload can rebuild lualine without losing its sections.
-M.lualine_opts = nil
+local lualine_opts
 
 ---@return string lualine theme name
 function M.load()
@@ -31,10 +30,17 @@ end
 
 function M.reload()
     local name = M.load()
-    if M.lualine_opts then
-        M.lualine_opts.options.theme = name
-        require('lualine').setup(M.lualine_opts)
+    if lualine_opts then
+        lualine_opts.options.theme = name
+        require('lualine').setup(lualine_opts)
     end
+end
+
+--- Applies the current theme and keeps the lualine options for :ThemeReload.
+---@param opts { lualine: table }
+function M.setup(opts)
+    lualine_opts = opts.lualine
+    M.reload()
 end
 
 vim.api.nvim_create_user_command('ThemeReload', M.reload, { desc = 'Re-read ~/.config/themes/current' })
