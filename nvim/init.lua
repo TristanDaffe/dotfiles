@@ -8,4 +8,7 @@ vim.g.maplocalleader = ','
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 
+-- Shared by several plugin/ files, so added before any of them.
+vim.pack.add({ 'https://github.com/nvim-mini/mini.nvim' })
+
 -- Options, keymaps, autocmds and plugins live in plugin/NN-*.lua, sourced in order after this file.

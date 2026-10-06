@@ -46,9 +46,21 @@ map('t', '<Esc>', [[<C-\><C-n>]], { desc = 'Exit terminal mode', silent = true }
 
 -- Toggle a bottom terminal. Alt layer like the split keys: <C-t> is the LSP
 -- tag-stack return, insert-mode indent and the shell's own Ctrl-T.
-map({ 'n', 't' }, '<M-t>', function() require('util.terminal').toggle() end, { desc = 'Toggle terminal' })
-
-map('n', '<leader>t', function() require('util.palette').open() end, { desc = 'Action palette' })
+local term = { buf = -1, win = -1 }
+map({ 'n', 't' }, '<M-t>', function()
+    if vim.api.nvim_win_is_valid(term.win) and vim.api.nvim_win_get_buf(term.win) == term.buf then
+        return vim.api.nvim_win_hide(term.win)
+    end
+    vim.cmd('botright 15split')
+    term.win = vim.api.nvim_get_current_win()
+    if vim.api.nvim_buf_is_valid(term.buf) then
+        vim.api.nvim_win_set_buf(term.win, term.buf)
+    else
+        vim.cmd.terminal()
+        term.buf = vim.api.nvim_get_current_buf()
+    end
+    vim.cmd.startinsert()
+end, { desc = 'Toggle terminal' })
 
 -- Clear search highlight on <Esc>
 map('n', '<Esc>', ':nohlsearch<CR>', { desc = 'Clear search highlight', silent = true })
