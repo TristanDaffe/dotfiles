@@ -1,6 +1,6 @@
 -- Only what this config calls into; the whole runtimepath is slow and indexes
 -- every installed plugin. Root is pinned by .luarc.json, not ~/.config/.git.
-return {
+vim.lsp.config('lua_ls', {
     settings = {
         Lua = {
             runtime = { version = 'LuaJIT' },
@@ -15,4 +15,4 @@ return {
             telemetry = { enable = false },
         },
     },
-}
+})

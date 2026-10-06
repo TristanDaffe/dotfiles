@@ -3,8 +3,8 @@ vim.pack.add({
     { src = 'https://github.com/mason-org/mason.nvim' },
 })
 
--- Server defaults come from nvim-lspconfig; overrides live in after/lsp/<name>.lua.
--- jdtls is started per project by nvim-jdtls (lua/lang/java.lua), so it is
+-- Server defaults come from nvim-lspconfig; overrides live in plugin/lang/<language>.lua.
+-- jdtls is started per project by nvim-jdtls (plugin/lang/java.lua), so it is
 -- installed but not enabled here.
 local SERVERS = {
     'lua_ls', 'yamlls', 'bashls', 'ansiblels',
@@ -55,13 +55,14 @@ vim.api.nvim_create_autocmd('LspAttach', {
         map('<leader>rn', vim.lsp.buf.rename, 'rename symbol')
         map('<leader>lf', vim.lsp.buf.format, 'format buffer')
         map('<C-k>', vim.lsp.buf.signature_help, 'signature help')
-        map('<leader>d', vim.diagnostic.open_float, 'show diagnostic')
     end,
 })
 
 vim.diagnostic.config({
     virtual_text = true,
     severity_sort = true,
+    -- Built-in ]d / [d / <C-w>d replace the old <leader>d diagnostic maps.
+    jump = { float = true },
     signs = {
         text = {
             [vim.diagnostic.severity.ERROR] = '󰅚 ',

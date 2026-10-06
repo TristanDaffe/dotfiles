@@ -26,7 +26,7 @@ local function include_paths(root)
     return paths
 end
 
-return {
+vim.lsp.config('protols', {
     cmd = function(dispatchers, config)
         local args = { 'protols' }
         local paths = include_paths(config.root_dir)
@@ -35,4 +35,10 @@ return {
         end
         return vim.lsp.rpc.start(args, dispatchers)
     end,
-}
+})
+
+vim.api.nvim_create_autocmd('FileType', {
+    group = vim.api.nvim_create_augroup('user.proto', { clear = true }),
+    pattern = 'proto',
+    callback = function(ev) require('util.lsp').grep_usages(ev.buf) end,
+})
