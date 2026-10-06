@@ -22,7 +22,7 @@ map('n', '<leader>b', ':NvimTreeToggle<CR>',   { desc = 'Toggle file explorer' }
 map('n', '<leader>B', ':NvimTreeFindFile<CR>', { desc = 'Reveal current file in explorer' })
 
 -- Global sessions live in stdpath('data')/session; the active one is saved on
--- exit, and on write/focus loss by config/autocmds.lua.
+-- exit, and on write/focus loss by plugin/02-autocmds.lua.
 require('mini.sessions').setup()
 -- No name and no active session: local ./Session.vim, the one tmux-resurrect looks for.
 vim.api.nvim_create_user_command('SessionWrite', function(o)

@@ -8,7 +8,4 @@ vim.g.maplocalleader = ','
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 
-require('config.options')
-require('config.keymaps')
-require('config.autocmds')
--- Plugins are added and configured by plugin/NN-*.lua, sourced in order after this file.
+-- Options, keymaps, autocmds and plugins live in plugin/NN-*.lua, sourced in order after this file.

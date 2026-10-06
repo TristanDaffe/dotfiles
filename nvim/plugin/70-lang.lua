@@ -6,7 +6,7 @@ vim.g.vimtex_view_general_options =
     .. ' || tmux split-window -h -l 40% -e BOOKOKRAT_PROTOCOL=kittyv2 bookokrat @pdf --zen-mode'
 
 vim.pack.add({
-    -- Started per project from ftplugin/java.lua (lua/lang/java.lua).
+    -- Started per project from after/ftplugin/java.lua (lua/lang/java.lua).
     { src = 'https://github.com/mfussenegger/nvim-jdtls' },
     { src = 'https://github.com/lervag/vimtex', version = 'v2.18' },
     -- Detects playbooks/roles as yaml.ansible, K runs ansible-doc.
