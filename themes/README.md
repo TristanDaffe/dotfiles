@@ -73,7 +73,7 @@ exists for the fzf preview pane but is useful on its own.
 | kitty | `~/.config/kitty/kitty.conf` | `include ../themes/current/kitty.conf`   |
 | tmux  | `~/.config/tmux/tmux.conf` | `source-file ~/.config/themes/current/tmux.conf` (last line) |
 | zsh   | `~/.zshrc` | `source ~/.config/zsh/powerline.zsh`, after `~/.p10k.zsh` |
-| nvim  | `~/.config/nvim/lua/theme.lua` | `dofile` of `current/nvim.lua`, called from `plugins.lua` |
+| nvim  | `~/.config/nvim/plugin/10-ui.lua` | `dofile` of `current/nvim.lua` (colour) and `current-bar/nvim.lua` (lualine shape) |
 
 kitty's include is relative to the directory holding `kitty.conf`, and is placed
 last in the file so theme colors win over anything above it.
@@ -85,7 +85,8 @@ last in the file so theme colors win over anything above it.
 - **kitty** — `kitty @ set-colors`, which needs `allow_remote_control yes` in
   `kitty.conf`. Without it the theme applies on next launch instead.
 - **tmux** — `source-file` + `refresh-client`. Works always.
-- **nvim** — sends `:ThemeReload` to every listening instance over its socket.
+- **nvim** — sends `:ThemeReload` (`bar-set`: `:BarStyleReload`) to every
+  listening instance over its socket.
   Instances started without `--listen` pick the theme up on next start.
 
 ## The tmux bar
@@ -351,7 +352,8 @@ Drop in three files. For `kitty.conf`, most themes publish a kitty palette
 upstream — use it rather than transcribing hexes. For `tmux.conf`, copy an
 existing one and swap the six colors in its header comment. For `nvim.lua`,
 configure the colorscheme plugin, `vim.cmd.colorscheme(...)`, and `return` the
-lualine theme name. Add the plugin to `nvim/lua/plugins.lua` if it's new.
+lualine theme name. Add the plugin to the `vim.pack.add` list in
+`nvim/plugin/10-ui.lua` if it's new.
 
 ## Adding an app
 

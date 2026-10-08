@@ -43,11 +43,14 @@ end
 vim.api.nvim_create_autocmd('LspAttach', {
     group = vim.api.nvim_create_augroup('user.lsp', { clear = true }),
     callback = function(args)
+        local tb = require('telescope.builtin')
+
         local function map(key, fn, desc)
             vim.keymap.set('n', key, fn, { buffer = args.buf, desc = 'LSP: ' .. desc })
         end
-        local tb = require('telescope.builtin')
+
         map('gd', tb.lsp_definitions, 'go to definition')
+        map('gi', tb.lsp_implementations, 'go to implementation')
         if not has_buf_map(args.buf, 'gr') then
             map('gr', tb.lsp_references, 'references')
         end
@@ -61,7 +64,6 @@ vim.api.nvim_create_autocmd('LspAttach', {
 vim.diagnostic.config({
     virtual_text = true,
     severity_sort = true,
-    -- Built-in ]d / [d / <C-w>d replace the old <leader>d diagnostic maps.
     jump = { float = true },
     signs = {
         text = {

@@ -23,6 +23,7 @@ vertical_scroll_sensitivity = 14
 ui_scale = "normal"
 device_view_mode = "grid"
 theme_dark = "Harper"
+mouse_profile_target = "pointer"
 
 [devices."serial:2237scu00168".identity.model_info]
 entity_count = 3
@@ -54,6 +55,8 @@ hires_wheel = false
 thumbwheel = false
 haptic_feedback = false
 haptic_panel = false
+dpi_gestures = false
+fn_lock = true
 
 [devices."serial:2237scu00168".links."receiver:96ea33beb39be516:slot:1".capabilities]
 buttons = true
@@ -64,6 +67,8 @@ hires_wheel = false
 thumbwheel = false
 haptic_feedback = false
 haptic_panel = false
+dpi_gestures = false
+fn_lock = true
 
 [devices."serial:2323lz53maz8"]
 dpi_presets = [1600]
@@ -104,6 +109,8 @@ hires_wheel = true
 thumbwheel = true
 haptic_feedback = false
 haptic_panel = false
+dpi_gestures = true
+fn_lock = false
 
 [devices."serial:2323lz53maz8".links."receiver:96ea33beb39be516:slot:2".capabilities]
 buttons = true
@@ -114,14 +121,16 @@ hires_wheel = true
 thumbwheel = true
 haptic_feedback = false
 haptic_panel = false
+dpi_gestures = true
+fn_lock = false
 
 [keyboard]
 
+[keyboard.bindings]
+f4= "None"
+
 [devices."serial:2323lz53maz8".links."receiver:96ea33beb39be516:slot:2".overrides]
 invert_scroll = true
-
-[devices."serial:2323lz53maz8".bindings]
-DpiToggle = "ShowActionsRing"
 
 [devices."serial:2323lz53maz8".bindings.GestureButton]
 Up = "None"
@@ -129,3 +138,6 @@ Down = "None"
 Left = "PreviousDesktop"
 Right = "NextDesktop"
 Click = "MissionControl"
+
+[devices."serial:2323lz53maz8".bindings]
+DpiToggle = "ShowActionsRing"

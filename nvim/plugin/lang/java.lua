@@ -47,37 +47,6 @@ local function bundles()
     return out
 end
 
--- Name is relative to the current package: `Foo` or `sub.pkg.Foo`.
-local function new_class()
-    local dir = vim.fn.expand('%:p:h')
-    local pkg
-    for _, line in ipairs(vim.api.nvim_buf_get_lines(0, 0, 50, false)) do
-        pkg = line:match('^%s*package%s+([%w_.]+)%s*;')
-        if pkg then break end
-    end
-
-    vim.ui.input({ prompt = 'New class: ' }, function(input)
-        if not input or input == '' then return end
-        local parts = vim.split(input, '.', { plain = true })
-        local name = table.remove(parts)
-        if #parts > 0 then
-            dir = dir .. '/' .. table.concat(parts, '/')
-            pkg = pkg and (pkg .. '.' .. table.concat(parts, '.')) or table.concat(parts, '.')
-        end
-
-        local path = dir .. '/' .. name .. '.java'
-        if vim.uv.fs_stat(path) then
-            return vim.notify(path .. ' already exists', vim.log.levels.WARN)
-        end
-        vim.fn.mkdir(dir, 'p')
-        local lines = pkg and { 'package ' .. pkg .. ';', '' } or {}
-        vim.list_extend(lines, { 'public class ' .. name .. ' {', '', '}' })
-        vim.fn.writefile(lines, path)
-        vim.cmd.edit(vim.fn.fnameescape(path))
-        vim.api.nvim_win_set_cursor(0, { #lines - 1, 0 })
-    end)
-end
-
 -- jdtls adds the detected main classes next to this one.
 local ATTACH = { type = 'java', request = 'attach', name = 'Attach to localhost:5005', hostName = '127.0.0.1', port = 5005 }
 
@@ -156,7 +125,6 @@ local function attach(buf)
         vim.keymap.set(mode, key, fn, { buffer = buf, silent = true, desc = 'Java: ' .. desc })
     end
 
-    map('n', '<leader>jn', new_class, 'new class')
     map('n', '<leader>jo', jdtls.organize_imports, 'organize imports')
     map('n', '<leader>jv', jdtls.extract_variable, 'extract variable')
     map('x', '<leader>jv', function() jdtls.extract_variable(true) end, 'extract variable')
@@ -185,3 +153,4 @@ vim.api.nvim_create_autocmd('FileType', {
     pattern = 'java',
     callback = function(ev) attach(ev.buf) end,
 })
+

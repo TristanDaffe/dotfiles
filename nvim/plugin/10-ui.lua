@@ -12,6 +12,12 @@ vim.pack.add({
 require('mini.icons').setup()
 MiniIcons.mock_nvim_web_devicons()
 
+require('mini.cmdline').setup({})
+
+---------------------------------
+--- Auto theme and bar style switching
+---------------------------------
+
 -- The colorscheme (~/.config/themes/current) and bar style (current-bar) are
 -- switched by `theme-set` / `bar-set`, which run :ThemeReload / :BarStyleReload
 -- in every listening instance.

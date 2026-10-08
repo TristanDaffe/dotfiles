@@ -25,9 +25,9 @@ end
 
 -- Bare prefix must be mapped: with timeoutlen=300, hesitating otherwise falls
 -- through to <Space> then d, which waits for a motion and deletes.
-map('<leader>d', function()
-    vim.api.nvim_echo({ { 'Debug: c j k o  b B L X  u r l t q  h s f   (<leader>? for the list)', 'WarningMsg' } }, false, {})
-end, 'prefix (shows available keys)', nil, false)
+-- map('<leader>d', function()
+--     vim.api.nvim_echo({ { 'Debug: c j k o  b B L X  u r l t q  h s f   (<leader>? for the list)', 'WarningMsg' } }, false, {})
+-- end, 'prefix (shows available keys)', nil, false)
 
 map('<leader>dc', call('continue'), 'start / continue')
 map('<leader>dj', call('step_over'), 'step over')
