@@ -135,8 +135,8 @@ invert_scroll = true
 [devices."serial:2323lz53maz8".bindings.GestureButton]
 Up = "None"
 Down = "None"
-Left = "PreviousDesktop"
-Right = "NextDesktop"
+Left = "None"
+Right = "None"
 Click = "MissionControl"
 
 [devices."serial:2323lz53maz8".bindings]
