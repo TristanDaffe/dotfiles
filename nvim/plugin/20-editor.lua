@@ -9,13 +9,85 @@ local map = vim.keymap.set
 
 require('mini.pairs').setup()
 
+-- .java files get the icon of the type they declare, read from the file and
+-- cached until its mtime changes.
+local JAVA_KINDS = {
+    class          = { lsp = 'class',     hl = 'MiniIconsOrange' },
+    abstract       = { lsp = 'class',     hl = 'MiniIconsGrey' },
+    interface      = { lsp = 'interface', hl = 'MiniIconsGreen' },
+    enum           = { lsp = 'enum',      hl = 'MiniIconsYellow' },
+    record         = { lsp = 'struct',    hl = 'MiniIconsCyan' },
+    ['@interface'] = { lsp = 'event',     hl = 'MiniIconsRed' },
+}
+local JAVA_MODIFIERS = {
+    public = true, protected = true, private = true, static = true,
+    final = true, sealed = true, non = true, strictfp = true,
+}
+local java_cache = {}
+
+local function java_kind(path, mtime)
+    local cached = java_cache[path]
+    if cached and cached.mtime == mtime then return cached.kind end
+    local kind
+    local f = io.open(path, 'r')
+    if f then
+        local in_comment, n = false, 0
+        for line in f:lines() do
+            n = n + 1
+            if n > 300 then break end
+            if in_comment then
+                local close = line:find('*/', 1, true)
+                in_comment = not close
+                line = close and line:sub(close + 2) or ''
+            end
+            line = line:gsub('/%*.-%*/', ''):gsub('//.*$', ''):gsub('%b()', '')
+            local open = line:find('/*', 1, true)
+            if open then
+                in_comment, line = true, line:sub(1, open - 1)
+            end
+            local abstract = false
+            for word in line:gmatch('[%w_@]+') do
+                if word == 'abstract' then
+                    abstract = true
+                elseif not JAVA_MODIFIERS[word] and not (word:sub(1, 1) == '@' and word ~= '@interface') then
+                    if JAVA_KINDS[word] then kind = (word == 'class' and abstract) and 'abstract' or word end
+                    break
+                end
+            end
+            if kind then break end
+        end
+        f:close()
+    end
+    java_cache[path] = { mtime = mtime, kind = kind }
+    return kind
+end
+
+local JavaKindDecorator = require('nvim-tree.api').Decorator:extend()
+
+function JavaKindDecorator:new()
+    self.enabled = true
+    self.highlight_range = 'none'
+    self.icon_placement = 'none'
+end
+
+function JavaKindDecorator:icon_node(node)
+    if node.type ~= 'file' or not node.name:match('%.java$') then return nil end
+    local stat = node.fs_stat or vim.uv.fs_stat(node.absolute_path)
+    local kind = JAVA_KINDS[java_kind(node.absolute_path, stat and stat.mtime.sec) or '']
+    if not kind then return nil end
+    return { str = (MiniIcons.get('lsp', kind.lsp)), hl = { kind.hl } }
+end
+
 require('nvim-tree').setup({
     sort = { sorter = 'case_sensitive' },
     view = {
         number = true,
         preserve_window_proportions = true,
     },
-    renderer = { group_empty = true },
+    renderer = {
+        group_empty = true,
+        decorators = { 'Git', 'Open', 'Hidden', 'Modified', 'Bookmark', 'Diagnostics', 'Copied', JavaKindDecorator, 'Cut' },
+    },
     filters = { dotfiles = true },
     git = { ignore = false, timeout = 500 },
 })
@@ -47,7 +119,9 @@ map('n', '<leader>t', function() require('util.palette').open() end, { desc = 'A
 
 -- Show key combinations in a popup
 require('which-key').setup({
+
 })
+
 
 -- Use mini.sessiosn to save and restore sessions
 -- Change defautl behavior to be compatible with tmux-resurrect
