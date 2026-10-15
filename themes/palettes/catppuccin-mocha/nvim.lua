@@ -2,7 +2,11 @@
 -- Sets the colorscheme and returns the lualine theme name.
 require('catppuccin').setup({
     flavour = 'mocha',
-    dim_inactive = { enabled = true },
+     dim_inactive = {
+        enabled = true,
+        shade = "dark",
+        percentage = 0.01,
+    },
     integrations = {
         cmp = true,
         nvimtree = true,
