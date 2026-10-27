@@ -12,7 +12,6 @@
 !themes/
 !zsh/
 !tmux/
-!openlogi/
 
 # recurse into the allowed dirs
 !*/**
