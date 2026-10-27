@@ -70,7 +70,7 @@ EOF
     printf '\033[?25l' >&2
     trap 'printf "\033[?25h" >&2' EXIT INT TERM
 
-    printf '  current: %s\n  j/k or arrows to move, enter to select, q to cancel\n\n' "$now" >&2
+    # printf '  current: %s\n  j/k or arrows to move, enter to select, q to cancel\n\n' "$now" >&2
 
     drawn=0
     while :; do
@@ -82,9 +82,9 @@ EOF
             if [ "$n" = "$now" ]; then m='*'; else m=' '; fi
             printf '\033[2K' >&2
             if [ "$i" -eq "$sel" ]; then
-                printf "  \033[1;7m %s $fmt \033[0m\n" "$m" "$n" >&2
+                printf "\033[1;7m %s $fmt \033[0m\n" "$m" "$n" >&2
             else
-                printf "    %s $fmt \n" "$m" "$n" >&2
+                printf "%s $fmt \n" "$m" "$n" >&2
             fi
         done <<EOF
 $names
